@@ -1,44 +1,45 @@
-import React, {Component} from 'react'
+import React, {Component} from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import { fetchMenu } from '../action/commonAction'
 
 class Menubar extends Component {
     constructor(){
         super()
         this.state = {
-            activeLabel: 'Home',
+            activeLabel: '',
             navLeaf:[
-                {
-                    label:'Home',
+                {   
+                    index:0,
+                    label:'',
                     link:'/'
-                },{
-                    label:'Women',
-                    link:'/d/women'
-                },{
-                    label:'Men',
-                    link:'/d/men'
-                },{
-                    label:'Kids',
-                    link:'/d/kids'
-                },{
-                    label:'Eletronics',
-                    link:'/d/eletronics'
-                },{
-                    label:'Books',
-                    link:'/d/books'
-                },{
-                    label:'Fashion',
-                    link:'/d/fashion'
-                },{
-                    label:'Grocery',
-                    link:'/d/grocery'
-                },{
-                    label:'NonGrocery',
-                    link:'/d/nonGrocery'
                 }
             ]
         }
     }
     
+    componentDidMount = ()=> {
+        this._asyncRequest = fetchMenu().then(
+            externalData => {
+              this._asyncRequest = null;
+              //console.log(externalData.data)
+              this.setState(externalData.data);
+            }
+          );
+    }
+
+    componentWillUnmount() {
+        if (this._asyncRequest) {
+          this._asyncRequest.cancel();
+        }
+      }
+
+    componentWillReceiveProps = nextProps => {
+        this.setState(nextProps.common);
+      }
+
     render(){
+        const menuLen = 6
         const navLen = this.state.navLeaf.length
         return(
             <div className="row" style={{ boxShadow: '0 4px 8px 0 rgba(28,32,36,.2)' }}>
@@ -49,19 +50,19 @@ class Menubar extends Component {
                         </button>
                         <div className="collapse navbar-collapse" id="navbarNavDropdown">
                             <ul className="navbar-nav">
-                                {this.state.navLeaf.map((e, i) => {
-                                    return i < 6 ? <li className={this.state.activeLabel === e.label ? 'nav-item active' : 'nav-item'} key={i} >
-                                        <a className="nav-link" href={e.link}>{e.label} <span className="sr-only">(current)</span></a>
+                                {this.state.navLeaf.sort((a,b)=>a.index>b.index).map((e, i) => {
+                                    return i < (menuLen) ? <li className={this.state.activeLabel === e.label ? 'nav-item active' : 'nav-item'} key={i} >
+                                        <a className="nav-link" style={{textTransform: "capitalize"}} href={e.link}>{e.label} <span className="sr-only">(current)</span></a>
                                     </li> : ''
                                 })}
-                                {navLen > 5 ?
+                                {navLen > menuLen ?
                                     <li className="nav-item dropdown">
                                         <a className="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             More...
                                         </a>
                                         <div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                            {this.state.navLeaf.map((e, i) => {
-                                                if (i > 5)
+                                            {this.state.navLeaf.sort((a,b)=>a.index>b.index).map((e, i) => {
+                                                if (i > menuLen-1)
                                                     return <a className="dropdown-item navbar-light" href={e.link} key={i}>{e.label}</a>
                                                 return ''
                                             })}
@@ -77,4 +78,8 @@ class Menubar extends Component {
     }
 }
 
-export default Menubar;
+function mapStateToProps(state){
+    return {common:state.common};
+}
+
+export default withRouter(connect(mapStateToProps, {})(Menubar));

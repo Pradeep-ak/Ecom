@@ -1,0 +1,42 @@
+version: "2"
+
+services:
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=example
+    volumes: 
+      - ./mongoData:/data/db
+  
+  solr:
+    image: solr
+    container_name: solr    
+    ports:
+     - "9983:9983"
+     - "8983:8983"
+    # volumes:
+    #   - data:/opt/solr/server/solr/mycores
+    entrypoint:
+      - docker-entrypoint.sh
+      - solr
+      - start
+      - -c
+      - -f
+    
+  # mongo-express :
+  #   image : mongo-express
+  #   ports :
+  #     - "8081:8081"
+  #   environment :
+  #     - ME_CONFIG_BASICAUTH_USERNAME=root
+  #     - ME_CONFIG_BASICAUTH_PASSWORD=example
+  #     - ME_CONFIG_MONGODB_PORT=27017
+  #     - ME_CONFIG_MONGODB_ADMINUSERNAME=root
+  #     - ME_CONFIG_MONGODB_ADMINPASSWORD=MongoDB2019!
+  #   links :
+  #     - mongo
+  #   depends_on: 
+  #     - mongo

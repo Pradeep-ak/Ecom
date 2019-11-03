@@ -1,63 +1,39 @@
-import React, {Component} from 'react'
+import React, {Component} from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import { fetchDepartment } from '../../../action/departmentAction'
+
 
 class Departmentpage extends Component {
     constructor(){
         super()
         this.state= {
             Department:'Men',
-            DepartmentName: "Department Name",
+            h1tag: "Department Name",
             Categories:[
-                { name:'SHOP CLOTHING',
+                { 
+                  index:0,
+                  name:'SHOP CLOTHING',
                   link: false,
                 },
-                { name:'Shirts',
+                { 
+                  index:1,
+                  name:'Shirts',
                   link: true,
                   href: '/c/men/shirts'
                 },
-                { name:'Jeans',
+                { 
+                  index:2,
+                  name:'Jeans',
                   link: true,
                   href: '/c/men/jeans'
                 },
-                { name:'Dress Clothes',
+                { 
+                  index:3,  
+                  name:'Dress Clothes',
                   link: true,
                   href: '/c/men/dressclothes'
-                },
-                { name:'Coats & Jackets',
-                  link: true,
-                  href: '/c/men/coatsjckets'
-                },
-                { name:'Dress Shirts',
-                  link: true,
-                  href: '/c/men/dressshirts'
-                },
-                { name:'Sport Coats & Blazers',
-                  link: true,
-                  href: '/c/men/sportcoatsblazers'
-                },
-                { name:'Sweaters',
-                  link: true,
-                  href: '/c/men/sweaters'
-                },
-                { name:'Underwear',
-                  link: true,
-                  href: '/c/men/underwear'
-                },
-                { name:'Socks',
-                  link: true,
-                  href: '/c/men/socks'
-                },
-                { name:'Activewear',
-                  link: true,
-                  href: '/c/men/activewear'
-                },
-                { name:'Shorts',
-                  link: true,
-                  href: '/c/men/shorts'
-                },
-                { name:'Swimwear',
-                  link: true,
-                  href: '/c/men/simwear'
-                }
+                }   
             ],
             Content:[
                 {
@@ -103,6 +79,27 @@ class Departmentpage extends Component {
             errors : {}
         }
     }
+
+    componentDidMount = ()=> {
+        this._asyncRequest = fetchDepartment(this.props.location).then(
+            externalData => {
+              this._asyncRequest = null;
+              console.log(externalData.data)
+              this.setState(externalData.data);
+            }
+          );
+    }
+
+    componentWillUnmount() {
+        if (this._asyncRequest) {
+          this._asyncRequest.cancel();
+        }
+    }
+
+    componentWillReceiveProps = nextProps => {
+        this.setState(nextProps.dept);
+    }
+
     
     render(){
         return(
@@ -110,7 +107,7 @@ class Departmentpage extends Component {
                 <div className="row justify-content-md-center">
                     <div className="col col-lg-12">
                         <br />
-                        <h1>{this.state.Department}</h1>
+                        <h1 style={{textTransform: "capitalize"}}>{this.state.h1tag}</h1>
                         <br />
                     </div>
                 </div>
@@ -119,11 +116,11 @@ class Departmentpage extends Component {
                         <section >
                             <br />
                             <ul className="list-group list-group-flush">
-                                {this.state.Categories.map(function (e, i) {
+                                {this.state.Categories.sort((a,b)=> a.index>b.index).map(function (e, i) {
                                     return e.link ?
-                                        <li className="list-group-item" style={{ border: '0', paddingTop: '.05rem', paddingBottom: '.05rem' }} key={i} ><a href={e.href}>{e.name}</a></li>
+                                        <li className="list-group-item" style={{ border: '0', paddingTop: '.05rem', paddingBottom: '.05rem', textTransform: "capitalize"}} key={i} ><a href={e.href}>{e.name}</a></li>
                                         :
-                                        <li className="list-group-item" style={{ border: '0' }} key={i} ><b>{e.name}</b></li>
+                                        <li className="list-group-item" style={{ border: '0', textTransform: "capitalize" }} key={i} ><b>{e.name}</b></li>
                                 }
                                 )}
 
@@ -154,7 +151,10 @@ class Departmentpage extends Component {
             </div>  
         )
     }
-
 }
 
-export default Departmentpage
+function mapStateToProps(state){
+    return {dept:state.dept};
+}
+
+export default withRouter(connect(mapStateToProps, {})(Departmentpage));

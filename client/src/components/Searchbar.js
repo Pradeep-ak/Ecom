@@ -50,7 +50,7 @@ class SearchBar extends Component {
   }
 
   function mapStateToProps(state){
-    console.log(state)
+    //console.log(state)
     return {search:state.search};
   }
 

@@ -1,32 +1,7 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema
+require('log4js').getLogger('mongoose').level = 'DEBUG';
+const DepartmentSchema = new mongoose.Schema({}, { strict: false });
 
-const DepartmentSchema = new Schema ({
-    name:{
-        type:String,
-        required:true
-    },
-    description:{
-        type:String,
-        required:true
-    },
-    uri:{
-        type:String,
-        required:true
-    },
-    seo:[seoItemsSchema],
-    categories:[{type: ObjectId, ref: 'Category'}]
+var Department = mongoose.model('Department', DepartmentSchema, 'department');
 
-});
-var seoItemsSchema = new Schema({
-    id:{
-        type:Number,
-        required:true
-    },
-    html:{
-        type:String,
-        required:false
-    }
-});
-
-exports.Department = mongoose.model('Department', DepartmentSchema);
+module.exports = Department;

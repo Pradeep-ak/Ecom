@@ -18,8 +18,6 @@ export const SearchSubmitRequest = (searchTerm, history )=> dispatch => {
     payload: {
      searchTerm: searchTerm
     }
-})
- );
-      
-      history.push('/d/men');
+}));    
+  // history.push('/d/men');
  };
