@@ -3,6 +3,10 @@ version: "2"
 services:
   mongo:
     image: mongo:latest
+    labels:
+      NAME: "mongo"
+    hostname: "mongo"
+    container_name: mongo   
     ports:
       - "27017:27017"
     environment:
@@ -13,6 +17,9 @@ services:
   
   solr:
     image: solr
+    labels:
+      NAME: "solr"
+    hostname: "solr"
     container_name: solr    
     ports:
      - "9983:9983"
@@ -25,7 +32,60 @@ services:
       - start
       - -c
       - -f
-    
+
+  web-app:
+    build: server/.
+    #working_dir: /
+    labels:
+      NAME: "nodeApp"
+    hostname: "nodeApp"
+    container_name: nodeApp
+    image: node-server-app:1.0
+    # entrypoint: ./wait-for-it.sh mongo:27017 solr:9983 -t 120 --
+    ports:
+      - "8080:5000"
+    environment:
+      - SOLR_HOST=solr
+      - MONGODB_HOST=mongo
+    links:
+      - mongo
+      - solr
+    depends_on:
+      - mongo
+      - solr   
+      
+  frontend-app:
+    build: client/.
+    labels:
+      NAME: "reactApp"
+    hostname: "reactApp"
+    container_name: reactApp
+    image: react-server-app:1.0
+    ports:
+      - "8090:3000"
+    links:
+      - mongo
+      - solr
+    depends_on:
+      - mongo
+      - solr
+
+  lb-app:
+    build: nginx/.
+    labels:
+      NAME: "nginx"
+    hostname: "nginx"
+    container_name: nginx
+    image: nginx-app:1.0
+    ports:
+      - "80:80"
+    links:
+      - mongo
+      - solr
+    depends_on:
+      - mongo
+      - solr
+
   # mongo-express :
   #   image : mongo-express
   #   ports :

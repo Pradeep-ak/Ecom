@@ -4,8 +4,6 @@ require('log4js').getLogger('solr-node').level = 'DEBUG';
 
 class ExtendedSolr extends SolrNode{
 
-LoadedDimVal;
-
 loadDimensionVal(dimVal){
     var query = client. query().q('*:*').facetQuery({
         on: true,
@@ -23,10 +21,14 @@ loadDimensionVal(dimVal){
 }
 }
 
+const SOLR_HOST = process.env.SOLR_HOST || 'localhost';
+const SOLR_PORT = process.env.SOLR_PORT || 8983;
+
 // Create client
 var client = new ExtendedSolr({
-    host: 'localhost',
-    port: '8983',
+    // host: 'solr',
+    host: SOLR_HOST,
+    port: SOLR_PORT,
     core: 'product',
     protocol: 'http'
 });
