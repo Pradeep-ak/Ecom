@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: ecom
+  name: ecom-solr
+  labels:
+    app: ecom-solr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: solrpod
+  template:
+    metadata:
+      labels:
+        app: solrpod
+    spec:
+      containers:
+        - name: solrcontainer
+          image: solr:latest
+          ports:
+            - containerPort: 8983
+            - containerPort: 9983
+          args:
+            - docker-entrypoint.sh
+            - solr
+            - start
+            - -c
+            - -f
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: ecom
+  name: solr
+spec:
+  ports:
+  - name: solr
+    port: 8983
+    targetPort: 8983
+  - name: zookeeper
+    port: 9983
+    targetPort: 9983
+  selector:
+    app: solrpod
+

@@ -13,7 +13,7 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=example
     volumes: 
-      - ./mongoData:/data/db
+      - ./data/mongoData:/data/db
   
   solr:
     image: solr
@@ -25,7 +25,7 @@ services:
      - "9983:9983"
      - "8983:8983"
     # volumes:
-    #   - data:/opt/solr/server/solr/mycores
+    #   - ./data/solr:/opt/solr/server/solr/mycores
     entrypoint:
       - docker-entrypoint.sh
       - solr
@@ -45,8 +45,8 @@ services:
     ports:
       - "8080:5000"
     environment:
-      - SOLR_HOST=solr
-      - MONGODB_HOST=mongo
+      - SOLR_SERVICE_HOST=solr
+      - MONGO_SERVICE_HOST=mongo
     links:
       - mongo
       - solr
@@ -85,6 +85,14 @@ services:
     depends_on:
       - mongo
       - solr
+
+  dataloader-app:
+    build: dataload/.
+    labels:
+      NAME: "dataload"
+    hostname: "dataload"
+    container_name: dataload
+    image: dataload-app:1.0
 
   # mongo-express :
   #   image : mongo-express

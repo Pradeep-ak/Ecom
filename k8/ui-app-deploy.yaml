@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: ecom
+  name: ecom-react
+  labels:
+    app: ecom-react
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reactpod
+  template:
+    metadata:
+      labels:
+        app: reactpod
+    spec:
+      containers:
+        - name: reactcontainer
+          image: react-server-app:1.0
+          ports:
+            - containerPort: 3000
+          imagePullPolicy: Never
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: ecom
+  name: react
+spec:
+  ports:
+  - port: 3000
+    targetPort: 3000
+  selector:
+    app: reactpod

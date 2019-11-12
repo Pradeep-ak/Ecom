@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: ecom
+  name: ecom-nginx
+  labels:
+    app: ecom-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginxpod
+  template:
+    metadata:
+      labels:
+        app: nginxpod
+    spec:
+      containers:
+        - name: nginxcontainer
+          image: nginx-app:1.0
+          ports:
+            - containerPort: 80
+          imagePullPolicy: Never
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: ecom
+  name: nginx
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: nginxpod
+  type: LoadBalancer
+

@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: ecom
+  name: ecom-dataloader
+  labels:
+    app: ecom-dataloader
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dataloaderpod
+  template:
+    metadata:
+      labels:
+        app: dataloaderpod
+    spec:
+      containers:
+        - name: dataloadercontainer
+          image: dataload-app:1.0
+          env:
+            - name: SOLR_HOST
+              value: solr
+            - name: MONGODB_HOST
+              value: mongo
+          imagePullPolicy: Never
+

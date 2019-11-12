@@ -21,8 +21,8 @@ loadDimensionVal(dimVal){
 }
 }
 
-const SOLR_HOST = process.env.SOLR_HOST || 'localhost';
-const SOLR_PORT = process.env.SOLR_PORT || 8983;
+const SOLR_HOST = process.env.SOLR_SERVICE_HOST || 'localhost';
+const SOLR_PORT = process.env.SOLR_SERVICE_PORT || 8983;
 
 // Create client
 var client = new ExtendedSolr({

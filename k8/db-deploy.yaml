@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: ecom
+  name: ecom-mongo
+  labels:
+    app: ecom-mongo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongopod
+  template:
+    metadata:
+      labels:
+        app: mongopod
+    spec:
+      containers:
+        - name: mongocontainer
+          image: mongo:latest
+          ports:
+            - containerPort: 27017
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: root
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: example
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: ecom
+  name: mongo
+spec:
+  ports:
+  - port: 27017
+    targetPort: 27017
+  selector:
+    app: mongopod

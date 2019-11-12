@@ -3,4 +3,5 @@ mongoData/
 .idea/
 __pycache__/
 env/
-*.py
+data/
+venv/

@@ -28,13 +28,13 @@ app.use(function (req, res, next) {
     next()
   })
 
-app.get('/',(req, res)=>{
+app.get('/api/',(req, res)=>{
 
-    res.send('Hello World')
     mongoose
     .connect(db)
     .then(()=>console.log('MongoDB Connected'))
     .catch((e)=>console.log(e))
+    res.send('Hello World')
 })
 
 app.use('/api/h',home);

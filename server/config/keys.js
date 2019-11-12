@@ -1,6 +1,6 @@
 
-const MONGO_HOST = process.env.MONGODB_HOST || 'localhost';
-const MONGO_PORT = process.env.MONGODB_PORT || 27017;
+const MONGO_HOST = process.env.MONGO_SERVICE_HOST || 'localhost';
+const MONGO_PORT = process.env.MONGO_SERVICE_PORT || 27017;
 
 module.exports = {
 // mongoURI:'mongodb+srv://pkulkar4:Sape1234@ecomm-kutht.mongodb.net/test?retryWrites=true&w=majority'
