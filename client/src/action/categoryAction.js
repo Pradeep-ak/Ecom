@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { CATEGORY_INIT_REQUEST } from './'
 import { CATEGORY_UPDATE_REQUEST } from '.'
 
 export const fetchCategory = path => {

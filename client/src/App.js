@@ -13,6 +13,7 @@ import Sitefooter from './components/layout/Sitefooter'
 import Homepage from './components/layout/pages/Homepage'
 import Deptpage from './components/layout/pages/Departmentpage'
 import Catpage from './components/layout/pages/Categorypage'
+import Searchpage from './components/layout/pages/Searchpage'
 
 
 class App extends Component {
@@ -31,6 +32,7 @@ class App extends Component {
                 <Route exact  path="/" component={Homepage} />
                 <Route exact  path="/d/:department" component={Deptpage} />
                 <Route exact  path="/c/:department/:category" component={Catpage} />
+                <Route exact  path="/s/:searchterm" component={Searchpage} />
               </article>
               <Sitefooter />
             </div>

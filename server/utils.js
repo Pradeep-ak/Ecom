@@ -1,4 +1,66 @@
+
 function Utils () {
+}
+
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.replace(new RegExp(search, 'g'), replacement);
+};
+
+Array.prototype.pushArray = function(arr) {
+    this.push.apply(this, arr);
+};
+
+Utils.prototype.getQf = function (params) {
+    returnArr = [];
+    var i, len;
+    for (i = 0, len = params.length; i < len; i++) {
+        returnArr.push( {
+            'field' : 'qf',
+            'value' : params[i]
+        });
+    }
+    return returnArr;
+}
+Utils.prototype.getMM = function (params) {
+    return [{
+            'field' : 'mm',
+            'value' : params
+        }];
+}
+Utils.prototype.getSort = function (params) {
+    return [{
+            'field' : 'sort',
+            'value' : 'termfreq(name, "'+params+'")desc'
+        }];
+}
+
+Utils.prototype.getFq = function (params) {
+    returnArr = [];
+    var i, len;
+    query = '';
+    for (let index = 0; index < Object.keys(params).length; index++) {
+        const ele = Object.keys(params)[index];
+        if (ele === 'searchTerm')
+            continue;
+
+        if(params[ele] instanceof Array){
+            var paramVal = params[ele];
+            for (let count = 0; count < paramVal.length; count++) {
+                const element = paramVal[count];
+                returnArr.push({
+                    'field' : 'fq',
+                    'value' : getDimMapping(ele)+':'+element
+                });
+            }
+        }else{
+            returnArr.push({
+                'field' : 'fq',
+                'value' : getDimMapping(ele)+':'+params[ele]
+            });    
+        }
+    }
+    return returnArr;
 }
 
 function getDimMapping(val) {
@@ -90,5 +152,12 @@ Utils.prototype.isSelected = (param, name, value) => {
     }
     return false;
   }
+
+Utils.prototype.convertToSlug = (Text) => {
+return Text
+    .toLowerCase().trim()
+    .replace(/[^\w ]+/g,'')
+    .replace(/ +/g,'-');
+}
 
 module.exports = Utils;

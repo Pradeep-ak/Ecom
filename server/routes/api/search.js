@@ -1,20 +1,38 @@
 const express = require('express');
-const Category = require('../../models/category');
 const client = require('../../config/solrClient')
 const Utils = require('../../utils')
 
 const router = express.Router();
 
-router.get('/:dept/:seoName', async (req, res)=>{
+router.get('/:seoName', async (req, res)=>{
     try{
-        var catRepo = await Category.find({id:req.query.id}).exec();
+        console.log('Search Term : ' + req.query.searchTerm);
+        //res.status(200).json(req.query.s)
+        var param = [];
+
+        //Add field against which search is performed in edismax query
+        param.pushArray(new Utils().getQf(['description^0.5', 'name^1','keyword^2']));
         
-        var query = client.query().q(new Utils().getQuery(req.query))
-        .start(0).rows(24).facetQuery({
+        //Add MM to the edismax query
+        param.pushArray(new Utils().getMM(req.query.searchTerm.split(" ").length));
+        
+        //Add the fiter value.
+        param.pushArray(new Utils().getFq(req.query));
+
+        //Add the Sort value based in search terms found count in Name Fields.
+        param.pushArray(new Utils().getSort(req.query.searchTerm));
+        
+        //Run the query in the solr indexing.
+        var query = client.query().q(req.query.searchTerm)
+        .edismax()
+        .addParams(param)
+        .start(0).rows(24)
+        .facetQuery({
             on: true,
             field:['brand','color','size','ITEM_TYPE','PRODUCT_TYPE','price_type']
         });
 
+        const result = await client.search(query);
         ProductCount = 0;
         products = []
         try {
@@ -46,15 +64,14 @@ router.get('/:dept/:seoName', async (req, res)=>{
                 dimVal = []
                 //console.log(result.facet_counts.facet_fields['brand'])
                 dimArr = result.facet_counts.facet_fields[dimName];
-                
                 for (let j = 0, i=0; j < dimArr.length; j++) {
                     if(dimArr[j+1] > 0){
                         var selected = new Utils().isSelected(req.query, dimName, dimArr[j])
                         url = '#'
                         if(selected){
-                            url = new Utils().removeParamToQuery('/c/'+req.params.dept+'/'+req.params.seoName, req.query, dimName, dimArr[j])
+                            url = new Utils().removeParamToQuery('/s/'+req.params.seoName, req.query, dimName, dimArr[j])
                         } else {
-                            url = new Utils().addParamToQuery('/c/'+req.params.dept+'/'+req.params.seoName, req.query, dimName, dimArr[j])
+                            url = new Utils().addParamToQuery('/s/'+req.params.seoName, req.query, dimName, dimArr[j])
                         }
                         dimVal[i]={ 
                             label:dimArr[j].replace('_', ' ').toLowerCase(),
@@ -87,14 +104,13 @@ router.get('/:dept/:seoName', async (req, res)=>{
             sort:'Featured',
             sortOption:[
                 'Featured',
-                'Arrivals',
-                'Best Sellers',
+                // 'Arrivals',
+                // 'Best Sellers',
                 'Price L-H',
                 'Price H-L',
-                'Rating H-L'
+                // 'Rating H-L'
             ],
-            Department:req.params.dept,
-            CategoryName:catRepo[0].get('name'),
+            SearchTerm:req.query.searchTerm,
             ProductCount:ProductCount,
             Products:products,
             Dim:dim

@@ -1,4 +1,4 @@
-version: "2"
+version: "3"
 
 services:
   mongo:
@@ -6,7 +6,7 @@ services:
     labels:
       NAME: "mongo"
     hostname: "mongo"
-    container_name: mongo   
+    container_name: "mongo"
     ports:
       - "27017:27017"
     environment:
@@ -20,7 +20,7 @@ services:
     labels:
       NAME: "solr"
     hostname: "solr"
-    container_name: solr    
+    container_name: "solr"
     ports:
      - "9983:9983"
      - "8983:8983"
@@ -37,9 +37,9 @@ services:
     build: server/.
     #working_dir: /
     labels:
-      NAME: "nodeApp"
-    hostname: "nodeApp"
-    container_name: nodeApp
+      NAME: "node"
+    hostname: "node"
+    container_name: "node"
     image: node-server-app:1.0
     # entrypoint: ./wait-for-it.sh mongo:27017 solr:9983 -t 120 --
     ports:
@@ -57,9 +57,9 @@ services:
   frontend-app:
     build: client/.
     labels:
-      NAME: "reactApp"
-    hostname: "reactApp"
-    container_name: reactApp
+      NAME: "react"
+    hostname: "react"
+    container_name: "react"
     image: react-server-app:1.0
     ports:
       - "8090:3000"
@@ -75,16 +75,15 @@ services:
     labels:
       NAME: "nginx"
     hostname: "nginx"
-    container_name: nginx
     image: nginx-app:1.0
     ports:
       - "80:80"
     links:
-      - mongo
-      - solr
+      - web-app
+      - frontend-app
     depends_on:
-      - mongo
-      - solr
+      - web-app
+      - frontend-app
 
   dataloader-app:
     build: dataload/.
@@ -93,6 +92,9 @@ services:
     hostname: "dataload"
     container_name: dataload
     image: dataload-app:1.0
+    environment:
+      - SOLR_SERVICE_HOST=solr
+      - MONGO_SERVICE_HOST=mongo
 
   # mongo-express :
   #   image : mongo-express

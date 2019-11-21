@@ -52,7 +52,7 @@ def getProdRecord(prod, cat_pp):
 
     solrRec['description'] = prod.get('description')
     solrRec['keyword'] = prod.get('keyword')
-    solrRec['name'] = prod.get('name')
+    solrRec['name'] = prod.get('name').replace('_'+prod.get('id'),'')
     solrRec['parentPP'] = prod.get('parentPP')
 
     if prod.get('parentPP') in cat_pp:
@@ -66,19 +66,36 @@ def getProdRecord(prod, cat_pp):
     # Price Section
     if 'price' in prod and 'amounts' in prod.get('price'):
         amts = prod.get('price').get('amounts')
+        isSale=False
+        isClearnce=False
         for amt in amts:
             if 'ORIGINAL' == amt.get('type'):
                 solrRec['O_price'] = amt.get('max')
                 solrRec['O_PercentOff'] = amt.get('maxPercentOff')
                 solrRec['price_type'] = amt.get('type')
             if 'SALE' == amt.get('type'):
+                isSale=True
                 solrRec['S_price'] = amt.get('max')
                 solrRec['S_PercentOff'] = amt.get('maxPercentOff')
                 solrRec['price_type'] = amt.get('type')
             if 'CLEARANCE' == amt.get('type'):
+                isClearnce=True
                 solrRec['C_price'] = amt.get('max')
                 solrRec['C_PercentOff'] = amt.get('maxPercentOff')
                 solrRec['price_type'] = amt.get('type')
+
+        if isClearnce:
+            solrRec['price'] = solrRec['C_price']
+            solrRec['PercentOff'] = solrRec['C_PercentOff']
+            solrRec['price_type'] = 'CLEARANCE'
+        elif isSale:
+            solrRec['price'] = solrRec['S_price']
+            solrRec['PercentOff'] = solrRec['S_PercentOff']
+            solrRec['price_type'] = 'SALE'
+        else:
+            solrRec['price'] = solrRec['O_price']
+            solrRec['PercentOff'] = solrRec['O_PercentOff']
+            solrRec['price_type'] = 'ORIGINAL'
 
     if 'attributes' in prod:
         for attr in prod.get('attributes'):

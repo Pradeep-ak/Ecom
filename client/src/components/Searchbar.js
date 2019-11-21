@@ -1,29 +1,26 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { SearchSubmitRequest } from '../action/searchActions'
+import { SearchSubmitRequest } from '../action/searchAction'
 
 class SearchBar extends Component {
     constructor(props){
       super(props)
-      this.state = this.props.search
-      this.handleSubmit = this.handleSubmit.bind(this);
+      this.state = {searchTerm : "",errors : {}}
       this.onChange = this.onChange.bind(this);
+    }
+
+    componentWillMount = ()=> {
+      const search = this.props.location.search; // could be '?foo=bar'
+      const params = new URLSearchParams(search);
+      const searchTerm = params.get('searchTerm'); // bar
+      if (searchTerm != null){
+        this.setState({['searchTerm']:searchTerm})
+      } 
     }
 
     onChange(e) {
         this.setState({ [e.target.name] : e.target.value});
-    }
-
-    handleSubmit(e) {
-      e.preventDefault();
-      console.log('-->', this.state['searchTerm']);
-      this.props.SearchSubmitRequest(this.state.searchTerm, this.props.history);
-    }
-
-    componentWillReceiveProps = nextProps => {
-      console.log('nextProps : ' + nextProps.search)
-      this.setState(nextProps.search);
     }
 
     render(){
@@ -33,7 +30,7 @@ class SearchBar extends Component {
               Site Logo
           </div>
           <div className="col-md-auto col-lg-8">
-            <form onSubmit={this.handleSubmit}>
+            <form method='get' action='/s/seoname'>
               <div className="input-group">
                   <input type="text" className="form-control" placeholder="Search for..."  name="searchTerm"
                   value={this.state.searchTerm} onChange={this.onChange} />

@@ -1,16 +1,15 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { fetchCategory } from '../../../action/categoryAction'
-import { updateCategory } from '../../../action/categoryAction'
+import { fetchSearchResults } from '../../../action/searchAction'
+import { updateSearch } from '../../../action/searchAction'
 
-class Categorypage extends Component {
+class Searchpage extends Component {
     constructor(){
         super()
         this.state={
             sort:'Featured',
-            Department:'Men',
-            CategoryName:'Jeans',
+            SearchTerm:'Blue Jeans',
             ProductCount:12,
             Dim:[
                 {
@@ -35,9 +34,6 @@ class Categorypage extends Component {
                         alttxt:''
                     },
                     skuImg:[
-                        {
-                            
-                        },
                         
                     ],
                     Maxprice:0,
@@ -65,19 +61,11 @@ class Categorypage extends Component {
     }
     selectLabel(e){
         console.log('==> '+ e.target.checked)
-        this.props.updateCategory(e.target.value, this.props.history);
-        // this.props.history.push(e.target.value);
-        // this._asyncRequest = fetchCategory(this.props.location).then(
-        //     externalData => {
-        //       this._asyncRequest = null;
-        //       console.log(externalData.data)
-        //       this.setState(externalData.data);
-        //     }
-        //   );
+        this.props.updateSearch(e.target.value, this.props.history);
     }
 
     componentDidMount = ()=> {
-        this._asyncRequest = fetchCategory(this.props.location).then(
+        this._asyncRequest = fetchSearchResults(this.props.location).then(
             externalData => {
               this._asyncRequest = null;
               console.log(externalData.data)
@@ -93,7 +81,8 @@ class Categorypage extends Component {
     }
 
     componentWillReceiveProps = nextProps => {
-        this.setState(nextProps.cat);
+        console.log('search page : ' + nextProps.search)
+        this.setState(nextProps.search);
     }
 
 
@@ -103,7 +92,7 @@ class Categorypage extends Component {
                 <div className="row justify-content-md-center">
                     <div className="col col-lg-12">
                         <br />
-                        <h1 style={{textTransform: "capitalize"}}>{this.state.CategoryName}</h1>
+                        <h1 style={{textTransform: "capitalize"}}>{this.state.SearchTerm}</h1>
                         <br />
                     </div>
                 </div>
@@ -179,7 +168,6 @@ class Categorypage extends Component {
                                                                 <img src={f.img} alt={f.alttxt}/>
                                                             </li>
                                                         })}
-                                                        
                                                     </ul>
                                                 }
                                                 </div>
@@ -201,11 +189,12 @@ class Categorypage extends Component {
                 </div>
             </div>
         )
+        
     }
 }
 
 function mapStateToProps(state){
-    return {cat:state.cat};
+     return {search:state.search};
 }
 
-export default withRouter(connect(mapStateToProps, {updateCategory})(Categorypage));
+export default withRouter(connect(mapStateToProps, {updateSearch})(Searchpage));

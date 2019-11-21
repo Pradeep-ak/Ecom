@@ -6,6 +6,7 @@ const client = require('./config/solrClient')
 const home = require('./routes/api/home');
 const department = require('./routes/api/department');
 const category = require('./routes/api/category');
+const search = require('./routes/api/search');
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.get('/api/',(req, res)=>{
 app.use('/api/h',home);
 app.use('/api/d',department);
 app.use('/api/c',category);
+app.use('/api/s',search);
 
 const port = process.env.PORT || 5000;
 
