@@ -11,7 +11,7 @@ router.get('/:seoName', async (req, res)=>{
         var param = [];
 
         //Add field against which search is performed in edismax query
-        param.pushArray(new Utils().getQf(['description^0.5', 'name^1','keyword^2']));
+        param.pushArray(new Utils().getQf(['description^0.5', 'name^1','keyword^2', 'id^3']));
         
         //Add MM to the edismax query
         param.pushArray(new Utils().getMM(req.query.searchTerm.split(" ").length));
@@ -29,7 +29,7 @@ router.get('/:seoName', async (req, res)=>{
         .start(0).rows(24)
         .facetQuery({
             on: true,
-            field:['brand','color','size','ITEM_TYPE','PRODUCT_TYPE','price_type']
+            field:['brand','Bed_Linen_Type','Bed_Size','Fabric_Content','Care','FABRIC_CONTENT','ITEM_TYPE','PRODUCT_TYPE','Features','Measurements','Base_Material','Neckline','Sleeve_Length','Apparel_Length','Sleeve_Style','Fabric_Description','FIT','Assembly','DELIVERY_TYPE','price_type','size','color']
         });
 
         const result = await client.search(query);
@@ -39,8 +39,26 @@ router.get('/:seoName', async (req, res)=>{
             const result = await client.search(query);
             //console.log('Response:', result);
             ProductCount = result.response.numFound;
+            if(ProductCount===1){
+                var id = result.response.docs[0].id
+                var name = result.response.docs[0].name[0]
+                var redirecturl = '/p/'+new Utils().convertToSlug(name.replace('_'+id,''))+'?id='+id
+                res.status(200).json({"REDIRECT_URL":redirecturl})
+                return;
+            }
             products = result.response.docs.map((e,i) => {
-                //console.log('Response:', e);
+                // console.log('Response:', e);
+                var IsPirce = false
+                var Maxprice = 'Click to check price'
+                var Minprice = 'Click to check price'
+                var Marketinglabel = ''
+                if(e.price_type != null){
+                    IsPirce = true
+                    Maxprice = (e.price_type[0]=='SALE'?e.S_price[0]:e.price_type=='CLEARANCE'?e.C_price[0]:e.O_price[0]);
+                    Minprice = (e.price_type[0]=='SALE'?e.S_price[0]:e.price_type=='CLEARANCE'?e.C_price[0]:e.O_price[0]);
+                    Marketinglabel = e.price_type[0];
+                }
+
                 return {
                     index:i,
                     id:e.id,
@@ -50,9 +68,10 @@ router.get('/:seoName', async (req, res)=>{
                         alttxt:e.name[0].replace('_'+e.id,'')
                     },
                     skuImg:[],
-                    Maxprice:(e.price_type[0]=='SALE'?e.S_price[0]:e.price_type=='CLEARANCE'?e.C_price[0]:e.O_price[0]),
-                    Minprice:(e.price_type[0]=='SALE'?e.S_price[0]:e.price_type=='CLEARANCE'?e.C_price[0]:e.O_price[0]),
-                    Marketinglabel:e.price_type[0],
+                    IsPirce: IsPirce,
+                    Maxprice:Maxprice,
+                    Minprice:Minprice,
+                    Marketinglabel:Marketinglabel,
                     productLink:'/p/'+new Utils().convertToSlug(e.name[0].replace('_'+e.id,''))+'?id='+e.id
                 }
             });

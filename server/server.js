@@ -7,6 +7,8 @@ const home = require('./routes/api/home');
 const department = require('./routes/api/department');
 const category = require('./routes/api/category');
 const search = require('./routes/api/search');
+const product = require('./routes/api/product');
+const proxy = require('./routes/api/proxy');
 
 const app = express();
 
@@ -29,7 +31,7 @@ app.use(function (req, res, next) {
     next()
   })
 
-app.get('/api/',(req, res)=>{
+app.get('/api/h/createconnection',(req, res)=>{
 
     mongoose
     .connect(db)
@@ -42,6 +44,9 @@ app.use('/api/h',home);
 app.use('/api/d',department);
 app.use('/api/c',category);
 app.use('/api/s',search);
+app.use('/api/p',product);
+
+app.use('/api/',proxy);
 
 const port = process.env.PORT || 5000;
 

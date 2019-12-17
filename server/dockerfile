@@ -22,4 +22,5 @@ COPY . .
 # RUN bash -c 'chmod 777 /wait-for-it.sh'
 
 EXPOSE 5000
-CMD [ "node", "server.js" ]
+# CMD [ "node", "server.js" ]
+CMD [ "npm", "run", "server" ]

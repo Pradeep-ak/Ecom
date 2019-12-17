@@ -42,6 +42,10 @@ for cat in cats:
             cat2PP[PPId].append(cat.get('id'))
 
 prodLst = mongo.getAllProduct()
+skuLst = mongo.getAllSku()
+skuMap= dict()
+for sku in skuLst:
+    skuMap[sku.get('id')]=sku
 
 def getProdRecord(prod, cat_pp):
     solrRec = dict()
@@ -104,7 +108,7 @@ def getProdRecord(prod, cat_pp):
     if 'skus' in prod:
         # print(len(prod.get('skus')))
         for sku in prod.get('skus'):
-            skuRepo = mongo.getSkuForId(sku)
+            skuRepo = [skuMap.get(sku)]
             # print(skuRepo[0])
             if 'option' in skuRepo[0]:
                 for option in skuRepo[0].get('option'):

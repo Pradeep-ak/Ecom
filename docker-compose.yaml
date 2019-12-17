@@ -16,7 +16,7 @@ services:
       - ./data/mongoData:/data/db
   
   solr:
-    image: solr
+    image: solr:8
     labels:
       NAME: "solr"
     hostname: "solr"
@@ -25,7 +25,7 @@ services:
      - "9983:9983"
      - "8983:8983"
     # volumes:
-    #   - ./data/solr:/opt/solr/server/solr/mycores
+    #   - ./data/solr:/var/solr
     entrypoint:
       - docker-entrypoint.sh
       - solr
@@ -43,7 +43,9 @@ services:
     image: node-server-app:1.0
     # entrypoint: ./wait-for-it.sh mongo:27017 solr:9983 -t 120 --
     ports:
-      - "8080:5000"
+      - "5000:5000"
+    volumes: 
+      - ./server/:/usr/src/app
     environment:
       - SOLR_SERVICE_HOST=solr
       - MONGO_SERVICE_HOST=mongo
@@ -53,7 +55,56 @@ services:
     depends_on:
       - mongo
       - solr   
-      
+
+  auth-app:
+    build: authserver/.
+    #working_dir: /
+    labels:
+      NAME: "authserver"
+    hostname: "authserver"
+    container_name: "authserver"
+    image: auth-server-app:1.0
+    # entrypoint: ./wait-for-it.sh mongo:27017 solr:9983 -t 120 --
+    ports:
+      - "9000:9000"
+    volumes: 
+      - ./authserver/:/usr/src/app
+    environment:
+      - MONGO_SERVICE_HOST=mongo
+  
+  acc-app:
+    build: accserver/.
+    #working_dir: /
+    labels:
+      NAME: "accserver"
+    hostname: "accserver"
+    container_name: "accserver"
+    image: acc-server-app:1.0
+    # entrypoint: ./wait-for-it.sh mongo:27017 solr:9983 -t 120 --
+    ports:
+      - "7000:7000"
+    volumes: 
+      - ./accserver/:/usr/src/app
+    environment:
+      - MONGO_SERVICE_HOST=mongo
+      - AUTH_SERVICE_HOST=authserver
+
+  checkout-app:
+    build: checkoutserver/.
+    #working_dir: /
+    labels:
+      NAME: "checkoutserver"
+    hostname: "checkoutserver"
+    container_name: "checkoutserver"
+    image: checkoutserver-server-app:1.0
+    # entrypoint: ./wait-for-it.sh mongo:27017 solr:9983 -t 120 --
+    ports:
+      - "8000:8000"
+    volumes: 
+      - ./checkoutserver/:/usr/src/app
+    environment:
+      - MONGO_SERVICE_HOST=mongo
+
   frontend-app:
     build: client/.
     labels:
@@ -62,7 +113,9 @@ services:
     container_name: "react"
     image: react-server-app:1.0
     ports:
-      - "8090:3000"
+      - "3000:3000"
+    volumes: 
+      - ./client/src:/usr/src/app/src
     links:
       - mongo
       - solr
@@ -85,16 +138,16 @@ services:
       - web-app
       - frontend-app
 
-  dataloader-app:
-    build: dataload/.
-    labels:
-      NAME: "dataload"
-    hostname: "dataload"
-    container_name: dataload
-    image: dataload-app:1.0
-    environment:
-      - SOLR_SERVICE_HOST=solr
-      - MONGO_SERVICE_HOST=mongo
+  # dataloader-app:
+  #   build: dataload/.
+  #   labels:
+  #     NAME: "dataload"
+  #   hostname: "dataload"
+  #   container_name: dataload
+  #   image: dataload-app:1.0
+  #   environment:
+  #     - SOLR_SERVICE_HOST=solr
+  #     - MONGO_SERVICE_HOST=mongo
 
   # mongo-express :
   #   image : mongo-express

@@ -70,3 +70,9 @@ class mongoDAO():
             return self.CategoriesCol.find({})
         except Exception as excep:
             print(excep)
+
+    def getAllSku(self):
+        try:
+            return self.SkuCol.find({})
+        except Exception as excep:
+            print(excep)

@@ -7,6 +7,10 @@ String.prototype.replaceAll = function(search, replacement) {
     return target.replace(new RegExp(search, 'g'), replacement);
 };
 
+String.prototype.capitalize = function(lower) {
+    return (lower ? this.toLowerCase() : this).replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
+};
+
 Array.prototype.pushArray = function(arr) {
     this.push.apply(this, arr);
 };
@@ -21,19 +25,19 @@ Utils.prototype.getQf = function (params) {
         });
     }
     return returnArr;
-}
+};
 Utils.prototype.getMM = function (params) {
     return [{
             'field' : 'mm',
             'value' : params
         }];
-}
+};
 Utils.prototype.getSort = function (params) {
     return [{
             'field' : 'sort',
             'value' : 'termfreq(name, "'+params+'")desc'
         }];
-}
+};
 
 Utils.prototype.getFq = function (params) {
     returnArr = [];
@@ -61,14 +65,14 @@ Utils.prototype.getFq = function (params) {
         }
     }
     return returnArr;
-}
+};
 
 function getDimMapping(val) {
     if(val==='id'){
         return 'categories';
     }
     return val;
-}
+};
 
 Utils.prototype.getQuery = (param) => {
     query = '';
@@ -85,7 +89,7 @@ Utils.prototype.getQuery = (param) => {
         }
     }
     return query.slice(0, -5);
-  }
+  };
 
 Utils.prototype.addParamToQuery = (uri, param, name, value) => {
     query = '?';
@@ -104,7 +108,7 @@ Utils.prototype.addParamToQuery = (uri, param, name, value) => {
     }
     query = query + name + '=' + value
     return uri+query;
-  }
+  };
 
   Utils.prototype.removeParamToQuery = (uri, param, name, value) => {
     query = '?';
@@ -130,7 +134,7 @@ Utils.prototype.addParamToQuery = (uri, param, name, value) => {
     }
     query = query.slice(0, -1);
     return uri+query;
-  }
+  };
 
 Utils.prototype.isSelected = (param, name, value) => {
 
@@ -151,13 +155,13 @@ Utils.prototype.isSelected = (param, name, value) => {
         }
     }
     return false;
-  }
+  };
 
 Utils.prototype.convertToSlug = (Text) => {
 return Text
     .toLowerCase().trim()
     .replace(/[^\w ]+/g,'')
     .replace(/ +/g,'-');
-}
+};
 
 module.exports = Utils;

@@ -68,8 +68,12 @@ class Searchpage extends Component {
         this._asyncRequest = fetchSearchResults(this.props.location).then(
             externalData => {
               this._asyncRequest = null;
-              console.log(externalData.data)
-              this.setState(externalData.data);
+              console.log(externalData)
+              if(externalData.data.REDIRECT_URL != null){
+                this.props.history.push(externalData.data.REDIRECT_URL)
+              } else {
+                this.setState(externalData.data);
+              }
             }
           );
     }
@@ -171,8 +175,15 @@ class Searchpage extends Component {
                                                     </ul>
                                                 }
                                                 </div>
-                                                <h5 style={{textAlign:'center', fontWeight:'bolder'}}>{e.Maxprice===e.Minprice?"$"+e.Minprice:"$"+e.Maxprice+" - $"+e.Minprice}</h5>
-                                                <h6 style={{textAlign:'center', color:'red', fontWeight:'bolder'}}>{e.Marketinglabel}</h6>
+                                                {e.IsPirce === true && <span>
+                                                    <h5 style={{textAlign:'center', fontWeight:'bolder'}}>{e.Maxprice===e.Minprice?"$"+e.Minprice:"$"+e.Maxprice+" - $"+e.Minprice}</h5>
+                                                    <h6 style={{textAlign:'center', color:'red', fontWeight:'bolder'}}>{e.Marketinglabel}</h6>
+                                                </span>
+                                                }
+                                                {e.IsPirce === false && <span>
+                                                    <h5 style={{textAlign:'center', fontWeight:'bolder'}}>{e.Minprice}</h5>
+                                                </span>
+                                                }
                                                 <p className="card-text prod-name" style={{fontWeight:'lighter'}}>{e.Name}</p>
                                             </div>
                                         </div>

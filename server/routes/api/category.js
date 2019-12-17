@@ -23,6 +23,16 @@ router.get('/:dept/:seoName', async (req, res)=>{
             ProductCount = result.response.numFound;
             products = result.response.docs.map((e,i) => {
                 //console.log('Response:', e);
+                var IsPirce = false
+                var Maxprice = 'Click to check price'
+                var Minprice = 'Click to check price'
+                var Marketinglabel = ''
+                if(e.price_type != null){
+                    IsPirce = true
+                    Maxprice = (e.price_type[0]=='SALE'?e.S_price[0]:e.price_type=='CLEARANCE'?e.C_price[0]:e.O_price[0]);
+                    Minprice = (e.price_type[0]=='SALE'?e.S_price[0]:e.price_type=='CLEARANCE'?e.C_price[0]:e.O_price[0]);
+                    Marketinglabel = e.price_type[0];
+                }
                 return {
                     index:i,
                     id:e.id,
@@ -32,9 +42,10 @@ router.get('/:dept/:seoName', async (req, res)=>{
                         alttxt:e.name[0].replace('_'+e.id,'')
                     },
                     skuImg:[],
-                    Maxprice:(e.price_type[0]=='SALE'?e.S_price[0]:e.price_type=='CLEARANCE'?e.C_price[0]:e.O_price[0]),
-                    Minprice:(e.price_type[0]=='SALE'?e.S_price[0]:e.price_type=='CLEARANCE'?e.C_price[0]:e.O_price[0]),
-                    Marketinglabel:e.price_type[0],
+                    IsPirce: IsPirce,
+                    Maxprice:Maxprice,
+                    Minprice:Minprice,
+                    Marketinglabel:Marketinglabel,
                     productLink:'/p/'+new Utils().convertToSlug(e.name[0].replace('_'+e.id,''))+'?id='+e.id
                 }
             });

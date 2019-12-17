@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { SearchSubmitRequest } from '../action/searchAction'
 
 class SearchBar extends Component {
     constructor(props){
@@ -51,4 +50,4 @@ class SearchBar extends Component {
     return {search:state.search};
   }
 
-  export default withRouter(connect(mapStateToProps, {SearchSubmitRequest})(SearchBar));
+  export default withRouter(connect(mapStateToProps, {})(SearchBar));
