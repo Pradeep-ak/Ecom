@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: ecom
+  name: ecom-node
+  labels:
+    app: ecom-node
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: authpod
+  template:
+    metadata:
+      labels:
+        app: authpod
+    spec:
+      containers:
+        - name: authcontainer
+          image: auth-server-app:1.0
+          ports:
+            - containerPort: 9000
+          # env:
+          #   - name: SOLR_SERVICE_HOST
+          #     value: solr
+          #   - name: MONGO_SERVICE_HOST
+          #     value: mongo
+          imagePullPolicy: Never
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: ecom
+  name: authserv
+spec:
+  ports:
+  - port: 9000
+    targetPort: 5000
+  selector:
+    app: authpod
+
