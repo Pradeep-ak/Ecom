@@ -34,4 +34,5 @@ spec:
   selector:
     app: nginxpod
   type: LoadBalancer
+  # type: NodePort
 

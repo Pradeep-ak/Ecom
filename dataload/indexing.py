@@ -1,5 +1,5 @@
 import pysolr;
-from bs4 import BeautifulSoup
+# from bs4 import BeautifulSoup
 import concurrent.futures
 import os
 

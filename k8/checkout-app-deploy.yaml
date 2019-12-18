@@ -2,24 +2,24 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: ecom
-  name: ecom-auth
+  name: ecom-checkout
   labels:
-    app: ecom-auth
+    app: ecom-checkout
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: authpod
+      app: checkoutpod
   template:
     metadata:
       labels:
-        app: authpod
+        app: checkoutpod
     spec:
       containers:
-        - name: authcontainer
-          image: auth-server-app:1.0
+        - name: checkoutcontainer
+          image: checkoutserver-server-app:1.0
           ports:
-            - containerPort: 9000
+            - containerPort: 8000
           # env:
           #   - name: SOLR_SERVICE_HOST
           #     value: solr
@@ -32,11 +32,11 @@ apiVersion: v1
 kind: Service
 metadata:
   namespace: ecom
-  name: authserver
+  name: checkoutserver
 spec:
   ports:
-  - port: 9000
-    targetPort: 9000
+  - port: 8000
+    targetPort: 8000
   selector:
-    app: authpod
+    app: checkoutpod
 

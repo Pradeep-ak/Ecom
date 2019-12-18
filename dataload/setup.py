@@ -3,7 +3,7 @@ import os
 
 class setup():
 
-    dbs = ['ecom','ecomAuth','ecomaccount','ecomorder']
+    dbs = ['ecom','ecomauth','ecomaccount','ecomorder']
     mongoHostname = os.environ.get('MONGO_SERVICE_HOST', 'localhost')
     mongoPort = os.environ.get('MONGO_SERVICE_PORT', '27017')
     mongouser = os.environ.get('MONGO_INITDB_ROOT_USERNAME', 'root')

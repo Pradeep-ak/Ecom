@@ -14,8 +14,8 @@ kubectl delete deploy -n ecom --all
 # echo "Waiting for 30 sec's..."
 # sleep 30
 
-# echo "Create namespace 'ecom'."
-# kubectl create namespace ecom
+echo "Create namespace 'ecom'."
+kubectl create namespace ecom
 
 # echo "Waiting for 1 minute..."
 # sleep 60
