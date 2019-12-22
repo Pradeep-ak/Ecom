@@ -1,12 +1,22 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import {cartTotal, loadCart} from '../action/commonAction'
 
 class SearchBar extends Component {
     constructor(props){
       super(props)
-      this.state = {searchTerm : "",errors : {}}
+      this.state = {searchTerm : "",errors : {}, cart:0}
       this.onChange = this.onChange.bind(this);
+      this.loadCart = this.loadCart.bind(this);
+    }
+
+    loadCart(e) {
+      this.props.history.push('/cart')
+    }
+
+    onChange(e) {
+      this.setState({ [e.target.name] : e.target.value});
     }
 
     componentWillMount = ()=> {
@@ -15,11 +25,30 @@ class SearchBar extends Component {
       const searchTerm = params.get('searchTerm'); // bar
       if (searchTerm != null){
         this.setState({['searchTerm']:searchTerm})
-      } 
+      }
+      this._asyncRequest = cartTotal().then(
+        externalData => {
+          this._asyncRequest = null;
+          //Update cart count.
+          var totalItem=0
+          externalData.data.cart.forEach(element => {
+            totalItem = totalItem + element.quantity
+          });
+          this.setState({cart:totalItem});
+        }
+      );
     }
 
-    onChange(e) {
-        this.setState({ [e.target.name] : e.target.value});
+    componentWillUnmount() {
+      if (this._asyncRequest) {
+        this._asyncRequest.cancel();
+      }
+    }
+
+    componentWillReceiveProps = nextProps => {
+      if(nextProps.common.totalItem != null){
+        this.setState({cart:nextProps.common.totalItem});
+      }
     }
 
     render(){
@@ -39,7 +68,11 @@ class SearchBar extends Component {
               </div>
             </form>  
           </div>
-          <div className="col col-lg-2"></div>  
+          <div className="col col-lg-2">
+              <span className="input-group-btn" style={{paddingLeft:'10px'}}>
+                <button className="btn btn-default" type="button" style={{borderColor:'black'}} onClick={this.loadCart}>Cart - {this.state.cart} Items</button>
+              </span>
+          </div>  
         </div>
       )
     }
@@ -47,7 +80,9 @@ class SearchBar extends Component {
 
   function mapStateToProps(state){
     //console.log(state)
-    return {search:state.search};
+    return {
+      common:state.common,
+    };
   }
 
   export default withRouter(connect(mapStateToProps, {})(SearchBar));

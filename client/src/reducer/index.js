@@ -4,12 +4,14 @@ import searchReducer from './searchReducer'
 import categoryReducer from './categoryReducer'
 import commonReducer from './commonReducer'
 import productReducer from './productReducer'
+import alertReducer from './alertReducer'
 
 export default combineReducers({
     home: homeReducer,
     search: searchReducer,
     cat: categoryReducer,
     common: commonReducer,
-    prod: productReducer
+    prod: productReducer,
+    alert:alertReducer
 });
 

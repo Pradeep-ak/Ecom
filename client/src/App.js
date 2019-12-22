@@ -16,6 +16,9 @@ import Deptpage from './components/layout/pages/Departmentpage'
 import Catpage from './components/layout/pages/Categorypage'
 import Searchpage from './components/layout/pages/Searchpage'
 import Productpage from './components/layout/pages/Productpage'
+import AlertBar from './components/Alertbar'
+import Cartpage from './components/layout/pages/Cartpage'
+import Checkoutpage from './components/layout/pages/Checkoutpage'
 
 class App extends Component {
   render(){
@@ -29,12 +32,15 @@ class App extends Component {
                 <Searchbar />
                 <Menubar />
               </header>
+              <AlertBar/>
               <article style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
                 <Route exact  path="/" component={Homepage} />
                 <Route exact  path="/d/:department" component={Deptpage} />
                 <Route exact  path="/c/:department/:category" component={Catpage} />
                 <Route exact  path="/s/:searchterm" component={Searchpage} />
                 <Route exact  path="/p/:name" component={Productpage} />
+                <Route exact  path="/cart" component={Cartpage} />
+                <Route exact  path="/checkout" component={Checkoutpage} />
               </article>
               <Sitefooter />
             </div>

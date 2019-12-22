@@ -1,0 +1,5 @@
+{
+    "Auth_mongoURI":"mongodb://root:example@authserver:27017/ecomauth",
+    "JWTSecertKey":"Ecom-AuthJWT@2019",
+    "accessExpireTime":"5m"
+}

@@ -3,7 +3,7 @@ const Product = require('../../models/product');
 const Sku = require('../../models/sku');
 const router = express.Router();
 
-router.get('/test/',(req, res)=>res.json({msg:'Hello Test Api Working..!!!!'}))
+router.get('/test',(req, res)=>res.json({msg:'Hello Test Api Working..!!!!'}))
 
 router.get('/:seoname',async (req, res)=>{
     try{
@@ -40,7 +40,15 @@ router.get('/:seoname',async (req, res)=>{
         console.log(err)
         res.status(500).json({mess:err.message})
     }
-})
+});
 
+router.get('/skus/details',async(req, res)=>{
+    if(req.body.skus){
+        skus = await Sku.find({$or:req.body.skus.map(e=>({id:e}))})
+        res.status(200).json(skus.map(e=>e.toJSON()))
+    }else{
+        res.status(500).json("")
+    }
+});
 
 module.exports=router;

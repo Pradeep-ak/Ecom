@@ -1,6 +1,9 @@
 
 class Utils{
 
+    roundToTwo(num) {    
+        return +(Math.round(num + "e+2")  + "e-2");
+    }
     convertToSlug(Text){
         return Text.toLowerCase().replace(/[^\w ]+/g,'').replace(/ +/g,'-');
     }

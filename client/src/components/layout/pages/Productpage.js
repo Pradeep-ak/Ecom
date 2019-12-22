@@ -92,10 +92,10 @@ const ProductOptions = (data) => {
                 return <option key={k} value={ele}>{ele}</option>
             })
             return   <div className="form-group" key={i}>
-            <label htmlFor="exampleFormControlSelect1" style={{margin:'0px 10px 0px 0px', textTransform: "capitalize"}}>{e} </label>
-            <select className="form-control" id="exampleFormControlSelect1" style={{width:'50%', display:'inline'}} name={e} onChange={data.onselect}>
-                {optionHtml}
-            </select>
+                <label htmlFor="exampleFormControlSelect1" style={{margin:'0px 10px 0px 0px', textTransform: "capitalize"}}>{e} </label>
+                <select className="form-control" id="exampleFormControlSelect1" style={{width:'50%', display:'inline'}} name={e} onChange={data.onselect}>
+                    {optionHtml}
+                </select>
           </div>
         });
     }
@@ -408,7 +408,7 @@ class Productpage extends Component {
     }
 
     componentWillReceiveProps(nextProps){
-        this.setState(nextProps.home);
+        this.setState(nextProps.prod);
     }
 
     changePrimary(e) {
@@ -430,7 +430,7 @@ class Productpage extends Component {
         // const form = event.target;
         // const data = new FormData(form);
         var sku_id = this.state['skus'][0]['id']
-        addToBag(sku_id)
+        this.props.addToBag(sku_id)
     }
 
      render() {
@@ -498,4 +498,4 @@ function mapStateToProps(state){
   }
 
 
-export default connect(mapStateToProps,{})(withRouter(Productpage));
+export default connect(mapStateToProps,{addToBag})(withRouter(Productpage));

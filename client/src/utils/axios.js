@@ -7,7 +7,7 @@ const localStorageService = LocalStorageService.getService();
 // Add a request interceptor
 axios.interceptors.request.use(
    config => {
-       console.log('In the request Interceptors = '+config.url)
+    //    console.log('In the request Interceptors = '+config.url)
        const token = localStorageService.getAccessToken();
        if (token) {
            config.headers['Authorization'] = 'Bearer ' + token;
@@ -33,10 +33,10 @@ axios.interceptors.request.use(
 //Add a response interceptor
 
 axios.interceptors.response.use((response) => {
-    console.log('In the response Interceptors')
+    // console.log('In the response Interceptors')
    return response
 }, function (error) {
-    console.log('In the response error Interceptors')
+    // console.log('In the response error Interceptors')
    const originalRequest = error.config;
 
 //    if (error.response.status === 401 && originalRequest.url === 
