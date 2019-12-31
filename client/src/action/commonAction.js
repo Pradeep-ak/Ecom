@@ -21,6 +21,7 @@ export const updateCart = (skuNumber, updatedQuantity) => dispatch => {
         dispatch({
           type:'INFO_ALERT',
           payload:{
+            display:true,
             type:'Info',
             alertMsg:resp.data.msg
           }
@@ -63,6 +64,7 @@ export const removeCartItem = (skuNumber) => dispatch => {
         dispatch({
           type:'INFO_ALERT',
           payload:{
+            display:true,
             type:'Info',
             alertMsg:resp.data.msg
           }
@@ -78,7 +80,6 @@ export const removeCartItem = (skuNumber) => dispatch => {
             totalItem:totalItem
           }
         });
-
         dispatch({
             type:'CART_DETAILS_UPDATED',
             payload:{
@@ -90,9 +91,23 @@ export const removeCartItem = (skuNumber) => dispatch => {
         dispatch({
           type:'INFO_ALERT',
           payload:{
+            display:true,
             type:'error',
             alertMsg:'Unable to remove item from cart.'
           }
         });
       })
+}
+
+export const removeAlert = () => dispatch => {
+    console.log('Clear the alert message.')
+    //Update Message for Successfully. 
+    dispatch({
+        type:'INFO_ALERT',
+        payload:{
+            display:false,
+            type:'Info',
+            alertMsg:''
+        }
+    });
 }

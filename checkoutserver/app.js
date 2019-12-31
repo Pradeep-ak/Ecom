@@ -1,9 +1,12 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken');
 let middleware = require('./utils/middleware');
 const bodyParser = require('body-parser');
 const orderApi = require('./routes/orderApi')
+const checkoutApi = require('./routes/checkoutApi')
+const ShippingRepo = require('./models/shipping')
+var shippingMethodRepo = require('./config/shippingMethods.json')
+
 
 const app = express();
 app.use(bodyParser.json());
@@ -24,7 +27,13 @@ app.get('/api/o/ping',(req, res)=>{
     res.status(200).json({message:'CS.Hello World'})
 });
 
+app.use('/api/o/checkout/',middleware.checkToken,checkoutApi);
 app.use('/api/o/',middleware.checkToken,orderApi);
+
+app.post('/api/config/loadShippingMethod', (req, res)=>{
+    ShippingRepo.create(shippingMethodRepo)
+    res.status(201).json({msg:'Created the Shipping Methods.'})
+});
 
 
 /// catch 404 and forward to error handler

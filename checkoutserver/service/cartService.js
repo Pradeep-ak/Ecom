@@ -14,6 +14,8 @@ async function _getCart(acc_id){
         var order=RepoTemplates.getOrder();
         order.Order_id = order_id;
         order.Acc_id = acc_id;
+        order.orderDetails={}
+        order.orderDetails.createdDate = Math.floor(new Date() / 1000);
         var newOrder = await orderRepo.create(order);
         return newOrder.toJSON();
     }
@@ -103,13 +105,14 @@ function _updateOrderSkuDetails(cart, skuDetails){
 }
 
 async function _saveCart(cart){
+    console.log('Update the order : ' + cart.Order_id)
     var newCart = await orderRepo.findOneAndUpdate({Order_id:cart.Order_id}, {$set:cart},{new:true, upsert:false});
     console.log(cart.Order_id)
     return newCart.toJSON();
 }
 
-function _getOrderPricing(cart, skuDetails){
-    pricingEngine.runPrice(cart, skuDetails)
+async function _getOrderPricing(cart, skuDetails){
+    await pricingEngine.runPrice(cart, skuDetails)
 }
 
 module.exports = {

@@ -3,6 +3,12 @@ function _getOrder(){
         Order_id:'',
         Acc_id:'',
         Status:'INPROGRESS',
+        // orderDetails:{
+        //     createdDate:'',
+        //     submittedDate:'',
+        //     userAgent:'',
+        //     IpAddress:''
+        // }
         // ItemList:[
         //     {
         //         sku:'',
@@ -68,7 +74,8 @@ function _getOrder(){
         //     paymentDetails:{
     
         //     }
-        // }
+        // }        
+        // 
     };
 } 
 

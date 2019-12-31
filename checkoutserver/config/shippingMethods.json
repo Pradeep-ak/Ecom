@@ -1,0 +1,24 @@
+[
+    {
+        "ShippingID":"SM_001",
+        "enable": true,
+        "label":"Free Shipping (Standard Shipping)",
+        "price":0,
+        "maxDays":15,
+        "minDays":10
+    },{
+        "ShippingID":"SM_002",
+        "enable": true,
+        "label":"Express Shipping (Standard Shipping)",
+        "price":30,
+        "maxDays":10,
+        "minDays":5
+    },{
+        "ShippingID":"SM_003",
+        "enable": true,
+        "label":"Prime Shipping",
+        "price":50,
+        "maxDays":5,
+        "minDays":2
+    }
+]

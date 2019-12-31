@@ -20,4 +20,4 @@ class config {
         return this.configData;
     }
 }
-module.exports = new config()
+module.exports = config

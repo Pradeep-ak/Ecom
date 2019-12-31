@@ -13,6 +13,7 @@ export const fetchProduct = path => {
       dispatch({
         type:'INFO_ALERT',
         payload:{
+          display:true,
           type:'Info',
           alertMsg:resp.data.msg
         }
@@ -32,6 +33,7 @@ export const fetchProduct = path => {
       dispatch({
         type:'INFO_ALERT',
         payload:{
+          display:true,
           type:'error',
           alertMsg:'Unable to add the item to bag'
         }

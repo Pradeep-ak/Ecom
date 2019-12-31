@@ -11,7 +11,7 @@ const PriceInfo = (data) => {
             ${new Utils().roundToTwo(data.priceInfo.eachItemPrice)} Each<br/>
             Total Amount: ${new Utils().roundToTwo(data.priceInfo.totalItemPrice)}<br/>
             {data.priceInfo.totalSaving===0?'':'Saving : $'+ new Utils().roundToTwo(data.priceInfo.totalSaving)}<br/>
-            <b>{data.priceInfo.priceType==='ORIGINAL'?'':data.priceInfo.priceType}</b>
+            <b style={{color:'red'}}>{data.priceInfo.priceType==='ORIGINAL'?'':data.priceInfo.priceType}</b>
         </span>
     </div>
 }
@@ -43,7 +43,18 @@ class Cartpage extends Component {
         this.updateCart = this.updateCart.bind(this)
         this.removeItem = this.removeItem.bind(this)
         this.loadCheckout = this.loadCheckout.bind(this)
+        this.openProductPage = this.openProductPage.bind(this)
         this.state = {            
+        }
+    }
+
+    openProductPage = (e) => {
+        var sku = e.target.innerHTML
+        console.log(sku)
+        if(sku && sku.length === 11){
+            var product = sku.match(/(.{1,7})/g);
+            console.log(product)
+            this.props.history.push('/p/cart?id=' + product[0])
         }
     }
 
@@ -84,7 +95,7 @@ class Cartpage extends Component {
 
      render() {
         var isCartEmpty = Object.keys(this.state).length > 0 && this.state.ItemList && this.state.ItemList.length > 0;
-        console.log('isCartEmpty = ' + isCartEmpty)
+        //console.log('isCartEmpty = ' + isCartEmpty)
        return(
            <div>
                 {isCartEmpty === false && <div>
@@ -107,7 +118,7 @@ class Cartpage extends Component {
                                             </span>
                                             })}
                                             <span>
-                                                <span><b>Sku</b> : {e.sku}</span><br/>
+                                                <span><b>Sku</b> : <span style={{cursor:'pointer'}} onClick={this.openProductPage}>{e.sku}</span></span><br/>
                                             </span>
                                         </div>
                                         <PriceInfo priceInfo={e.priceInfo}/>
@@ -133,7 +144,7 @@ class Cartpage extends Component {
                                 <div className="media-body" style={{textAlign:'justify'}}>
                                     <div style={{display:'inline-block', verticalAlign:'middle', float:'right', minWidth:'300px'}}>
                                         <input type="button" value="Checkout" 
-                                        style={{backgroundColor: '#29b363', width: '70%', height: '40px', border: 'black solid 0.5px'}}
+                                        style={{backgroundColor: '#29b363', width: '70%', height: '40px', border: 'black solid 0.5px', boxShadow: '0 4px 8px 0 rgba(28,32,36,.2)'}}
                                         onClick={this.loadCheckout}/>
                                     </div>
                                 </div>

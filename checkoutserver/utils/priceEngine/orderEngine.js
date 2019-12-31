@@ -21,6 +21,9 @@ function _getOrderItemSaving(ItemList){
 }
 
 function _getOrderShippingTotal(ShippingInfo){
+    if(ShippingInfo && ShippingInfo.priceInfo && ShippingInfo.priceInfo.totalPrice){
+        return ShippingInfo.priceInfo.totalPrice;
+    } 
     return 0;
 }
 
@@ -50,6 +53,7 @@ function _priceInfo(order){
 function _price(order){
     PriceInfo = _priceInfo(order)
     order.PriceInfo=PriceInfo;
+    return order;
 }
 
 module.exports = {

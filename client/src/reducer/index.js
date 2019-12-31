@@ -5,6 +5,7 @@ import categoryReducer from './categoryReducer'
 import commonReducer from './commonReducer'
 import productReducer from './productReducer'
 import alertReducer from './alertReducer'
+import checkoutReducer from './checkoutReducer'
 
 export default combineReducers({
     home: homeReducer,
@@ -12,6 +13,7 @@ export default combineReducers({
     cat: categoryReducer,
     common: commonReducer,
     prod: productReducer,
-    alert:alertReducer
+    alert:alertReducer,
+    checkout:checkoutReducer
 });
 
