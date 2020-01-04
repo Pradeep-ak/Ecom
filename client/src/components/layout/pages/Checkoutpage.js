@@ -25,7 +25,7 @@ const PaymentSection = (data) => {
             <div className="col col-lg-12" style={{textAlign:'left', boxShadow: '0 4px 8px 0 rgba(28,32,36,.2)'}}>
                 <br/>
                 <form onSubmit={data.submit}>
-                    <input type="radio" name="payment_type" value='COD' defaultChecked={COD}/> COD<br/><br/>
+                    <input type="radio" name="payment_type" value='COD' defaultChecked={COD}/> COD (<i>Cash on Delivery</i>)<br/><br/>
                     <div style={{minWidth:'50%', textAlign:'right'}}>
                         <input type="submit" name="Next" value="Next" style={{width:'30%'}}/>
                     </div>
@@ -482,10 +482,9 @@ class Checkoutpage extends Component {
 
                         <br/><br/>
 
-                        {(this.state.order.review === true) && <button type="button" onClick={this.loadReview}>
-                                    Review
-                                </button>
-                        }
+                        {(this.state.order.review === true) && <div style={{minWidth:'60%', textAlign:'right'}}>
+                                <button type="button" onClick={this.loadReview} style={{width:'30%'}}>Review</button>
+                            </div>}
                         <br/>
                     </div>
                     <div className="col col-lg-1">

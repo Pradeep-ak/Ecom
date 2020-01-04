@@ -133,9 +133,7 @@ class Cartpage extends Component {
                                     <div style={{display:'inline-block', verticalAlign:'middle', float:'right', minWidth:'300px'}}>
                                         Sub Total : ${new Utils().roundToTwo(this.state.PriceInfo.orderSubTotal)}<br/>
                                         Total Saving : ${new Utils().roundToTwo(this.state.PriceInfo.orderItemSaving)}<br/>
-                                        Shipping : ${new Utils().roundToTwo(this.state.PriceInfo.orderShippingTotal)}<br/>
-                                        Tax Amount : ${new Utils().roundToTwo(this.state.PriceInfo.orderTaxAmount)}<br/>
-                                        Order Total : ${new Utils().roundToTwo(this.state.PriceInfo.orderTotal)}<br/>
+                                        Order Total : ${new Utils().roundToTwo(this.state.PriceInfo.orderSubTotal)}<br/>
                                         <hr/>
                                     </div>
                                 </div>
@@ -153,14 +151,12 @@ class Cartpage extends Component {
                         <br/><br/><br/><br/><br/><br/>
                     </div>}
            </div>
-        
        )
-     }
+    }
 }
 
 function mapStateToProps(state){
     return {common:state.common};
-  }
-
+}
 
 export default connect(mapStateToProps,{updateCart, removeCartItem})(withRouter(Cartpage));

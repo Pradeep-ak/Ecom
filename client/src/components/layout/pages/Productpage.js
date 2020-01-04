@@ -390,6 +390,7 @@ class Productpage extends Component {
               this._asyncRequest = null;
               //console.log(externalData.data)
               externalData.data['primaryImage'] = externalData.data.images.filter(e=>e.type==='PRIMARY')
+              //extarct dim from product.
               var dim = new Utils().getDimension(externalData.data)
               externalData.data['dimension'] = dim;
               var count = 0 

@@ -19,6 +19,8 @@ import Productpage from './components/layout/pages/Productpage'
 import AlertBar from './components/Alertbar'
 import Cartpage from './components/layout/pages/Cartpage'
 import Checkoutpage from './components/layout/pages/Checkoutpage'
+import Review from './components/layout/pages/Reviewpage'
+import OrderConfirmation from './components/layout/pages/OrderConfirmationpage' 
 
 class App extends Component {
   render(){
@@ -40,7 +42,9 @@ class App extends Component {
                 <Route exact  path="/s/:searchterm" component={Searchpage} />
                 <Route exact  path="/p/:name" component={Productpage} />
                 <Route exact  path="/cart" component={Cartpage} />
-                <Route exact  path="/checkout" component={Checkoutpage} />
+                <Route exact  path="/checkout" component={Checkoutpage}/>
+                <Route exact  path="/review" component={Review}/>
+                <Route exact  path="/oc" component={OrderConfirmation}/>
               </article>
               <Sitefooter />
             </div>

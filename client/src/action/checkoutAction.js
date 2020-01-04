@@ -5,6 +5,14 @@ export const initalLoad = () => {
     return axios.get('/api/o/checkout/order')
 }
 
+export const initalReviewLoad = () => {
+    return axios.get('/api/o/checkout/orderReview')
+}
+
+export const loadOrderConfirmation = (path) => {
+    return axios.get('/api/o/checkout/loadOrderConfirmation'+path.search)
+}
+
 export const updatePersonalInfo = (data) => dispatch => {
     axios.put('/api/o/checkout/personalInfo', data).then(resp=>{
       //Update Message for Successfully.
@@ -210,4 +218,34 @@ export const updateBillingInfo = (data) => dispatch => {
     });
   }
 
+
+  export const submitOrder = (history) => dispatch => {
+    axios.post('/api/o/checkout/orderSubmit').then(resp=>{
+      //Update Message for Successfully.
+      if(resp.data && resp.data.status && resp.data.status === 'SUBMITTED'){
+        history.push('/oc?orderId='+resp.data.id);
+      }
+    }).catch(error => {
+        console.log(error.response.status)
+    if(error.response.status===400){
+        dispatch({
+            type:'INFO_ALERT',
+            payload:{
+              display:true,
+              type:'error',
+              alertMsg:error.response.data.msg
+            }
+          });  
+    } else {
+        dispatch({
+            type:'INFO_ALERT',
+            payload:{
+              display:true,
+              type:'error',
+              alertMsg:'Failed to submit the order.'
+            }
+          });
+    }
+    });
+  }
   

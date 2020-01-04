@@ -27,7 +27,12 @@ const _whatIsIt = (object) => {
     }
 }
 
+_clone = a => {
+    return JSON.parse(JSON.stringify(a));
+ }
+
 module.exports ={
     formUrlEncoded:_formUrlEncoded,
-    whatIsIt:_whatIsIt
+    whatIsIt:_whatIsIt,
+    clone : _clone
 }

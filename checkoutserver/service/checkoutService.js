@@ -1,4 +1,5 @@
 const ShippingRepo = require('../models/shipping')
+const orderRepo = require('../models/order')
 
 _fillPersonalData = order => {
     html = ''//'Pradeep Kulkarni <br/> pradeep4jobs@gmail.com <br/> 9972687910';
@@ -191,6 +192,31 @@ _updatePaymentInfo = (order, data) => {
     order.PaymentInfo.type = data.paymentType
 }
 
+_submitOrder = (order, userAgent, IPaddress) => {
+    //Validation
+    if(!order.orderDetails){
+        order.orderDetails = {}
+    }
+    order.orderDetails.submittedDate = Math.floor(new Date() / 1000)
+    order.orderDetails.userAgent = userAgent
+    order.orderDetails.IpAddress = IPaddress
+    order.Status = 'SUBMITTED'
+
+}
+
+async function _getSubmittedOrder(acc_id, orderId){
+    console.log('order id : ' + orderId + ', Acc Id : ' + acc_id)
+    if(orderId){
+        console.log('Query the mongo.')
+        var orderItem = await orderRepo.findOne({Acc_id:acc_id, Order_id: orderId, Status:'SUBMITTED'}).exec();
+        console.log('Order data from DB : ' + orderItem)
+        if(orderItem){
+            return orderItem.toJSON();
+        }
+    }
+    return;
+}
+
 Date.prototype.addDays = function(days) {
     var date = new Date(this.valueOf());
     date.setDate(date.getDate() + days);
@@ -217,5 +243,7 @@ module.exports = {
     updateShippingType:_updateShippingType,
     copyShippingToBillingAddr:_copyShippingToBillingAddr,
     updateBillingAddress:_updateBillingAddress,
-    updatePaymentInfo:_updatePaymentInfo
+    updatePaymentInfo:_updatePaymentInfo,
+    submitOrder:_submitOrder,
+    getSubmittedOrder:_getSubmittedOrder
 }
