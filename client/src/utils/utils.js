@@ -1,9 +1,28 @@
 
 class Utils{
 
+    isSearchEnabled(path){
+        return !(
+            path.pathname.startsWith('/checkout') || 
+            path.pathname.startsWith('/review'));
+    }
+
+    isCartEnabled(path){
+        return !(
+            path.pathname.startsWith('/checkout') || 
+            path.pathname.startsWith('/review'));
+    }
+
+    isMenuBarEnabled(path){
+        return !(
+            path.pathname.startsWith('/checkout') || 
+            path.pathname.startsWith('/review'));
+    }
+
     roundToTwo(num) {    
         return +(Math.round(num + "e+2")  + "e-2");
     }
+
     convertToSlug(Text){
         return Text.toLowerCase().replace(/[^\w ]+/g,'').replace(/ +/g,'-');
     }

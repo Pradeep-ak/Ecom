@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { fetchMenu } from '../action/commonAction'
+import utils from '../utils/utils'
 
 class Menubar extends Component {
     constructor(){
@@ -41,7 +42,9 @@ class Menubar extends Component {
     render(){
         const menuLen = 6
         const navLen = this.state.navLeaf.length
+        var menu = new utils().isMenuBarEnabled(this.props.location);
         return(
+            menu &&
             <div className="row" style={{ boxShadow: '0 4px 8px 0 rgba(28,32,36,.2)' }}>
                 <div className="col-md-auto " style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
                     <nav className="navbar navbar-expand-lg navbar-light">

@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {cartTotal, loadCart} from '../action/commonAction'
+import utils from '../utils/utils'
 
 class SearchBar extends Component {
     constructor(props){
@@ -58,7 +59,7 @@ class SearchBar extends Component {
               Site Logo
           </div>
           <div className="col-md-auto col-lg-8">
-            <form method='get' action='/s/seoname'>
+            {new utils().isSearchEnabled(this.props.location) && <form method='get' action='/s/seoname'>
               <div className="input-group">
                   <input type="text" className="form-control" placeholder="Search for..."  name="searchTerm"
                   value={this.state.searchTerm} onChange={this.onChange} required />
@@ -66,12 +67,12 @@ class SearchBar extends Component {
                     <button className="btn btn-default" type="submit" style={{borderColor:'black'}} >Go!</button>
                   </span>
               </div>
-            </form>  
+            </form>}  
           </div>
           <div className="col col-lg-2">
-              <span className="input-group-btn" style={{paddingLeft:'10px'}}>
+            {new utils().isCartEnabled(this.props.location) && <span className="input-group-btn" style={{paddingLeft:'10px'}}>
                 <button className="btn btn-default" type="button" style={{borderColor:'black'}} onClick={this.loadCart}>Cart - {this.state.cart} Items</button>
-              </span>
+              </span>}
           </div>  
         </div>
       )

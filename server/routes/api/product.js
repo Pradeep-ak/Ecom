@@ -14,11 +14,14 @@ router.get('/:seoname',async (req, res)=>{
             prodRepo[0].set('name', name);
             skuRepos = []
             skus = prodRepo[0].get('skus');
-            for (let index = 0; index < skus.length; index++) {
-                const sku = skus[index];
-                skuRepo = await Sku.findOne({'id':sku}).exec();
-                skuRepos.push(skuRepo)
+            if(skus && skus.length > 0){
+                skuRepos = await Sku.find({$or:skus.map(e=>({id:e}))}).exec();
             }
+            // for (let index = 0; index < skus.length; index++) {
+            //     const sku = skus[index];
+            //     skuRepo = await Sku.findOne({'id':sku}).exec();
+            //     skuRepos.push(skuRepo)
+            // }
             prodRepo[0].set('skus', skuRepos);
             prodRepo[0].get('attributes').forEach(element => {
                 element.name = element.name.capitalize(true);
