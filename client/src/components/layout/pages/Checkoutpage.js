@@ -249,7 +249,7 @@ const PersonalSection = (data) => {
                     <span style={{minWidth:'20%'}}>  </span>
                     <input type="text" name="LastName" defaultValue={lname} placeholder="Last Name"style={{minWidth:'30%'}} required maxLength='20'/><br/><br/>
                     <input type="email" name="emailId" defaultValue={email} placeholder="Email ID" style={{minWidth:'70%'}} required maxLength='40'/><br/><br/>
-                    <input type="tel" name="phoneNum" defaultValue={phoneNumber} placeholder="Phone Number" style={{minWidth:'50%'}} pattern="+91-[0-9]{10}" required maxLength='14'/><span> Format: +91-XXXXXXXXXX</span><br/><br/>
+                    <input type="tel" name="phoneNum" defaultValue={phoneNumber} placeholder="Phone Number" style={{minWidth:'50%'}} pattern="[0-9]{10}" required maxLength='10'/><span> Format: XXXXXXXXXX</span><br/><br/>
                     <div style={{minWidth:'50%', textAlign:'right'}}>
                         <input type="submit" name="Next" value="Next" style={{width:'30%'}}/>
                     </div>

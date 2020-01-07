@@ -1,7 +1,8 @@
 import React, {Component}from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { loadOrderConfirmation } from '../../../action/checkoutAction'
+import { loadOrderConfirmation} from '../../../action/checkoutAction'
+import { refreshCartTotal } from '../../../action/commonAction'
 import Utils from '../../../utils/utils'
 
 
@@ -80,6 +81,7 @@ class OrderConfirmationpage extends Component {
     }
 
     componentDidMount = () => {
+        this.props.refreshCartTotal();
         this._asyncRequest = loadOrderConfirmation(this.props.location).then(
             externalData => {
               this._asyncRequest = null;
@@ -143,4 +145,4 @@ function mapStateToProps(state){
   }
 
 
-export default connect(mapStateToProps,{})(withRouter(OrderConfirmationpage));
+export default connect(mapStateToProps,{refreshCartTotal})(withRouter(OrderConfirmationpage));

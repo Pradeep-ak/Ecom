@@ -28,9 +28,11 @@ export const updateCart = (skuNumber, updatedQuantity) => dispatch => {
         });
         //Update cart count.
         var totalItem=0
-        resp.data.cart.ItemList.forEach(element => {
-          totalItem = totalItem + element.quantity
-        });
+        if(resp.data.cart.ItemList){
+            resp.data.cart.ItemList.forEach(element => {
+                totalItem = totalItem + element.quantity
+              });
+        }
         dispatch({
           type:'CART_UPDATED',
           payload:{
@@ -71,9 +73,11 @@ export const removeCartItem = (skuNumber) => dispatch => {
         });
         //Update cart count.
         var totalItem=0
-        resp.data.cart.ItemList.forEach(element => {
-          totalItem = totalItem + element.quantity
-        });
+        if(resp.data.cart.ItemList){
+            resp.data.cart.ItemList.forEach(element => {
+                totalItem = totalItem + element.quantity
+              });
+        }
         dispatch({
           type:'CART_UPDATED',
           payload:{
@@ -110,4 +114,24 @@ export const removeAlert = () => dispatch => {
             alertMsg:''
         }
     });
+}
+
+export const refreshCartTotal = () => dispatch => {
+    axios.get('/api/o/cartTotal').then(resp=>{
+        //Update cart count.
+        var totalItem=0
+        if(resp.data.cart.ItemList){
+            resp.data.cart.ItemList.forEach(element => {
+                totalItem = totalItem + element.quantity
+              });
+        }
+        dispatch({
+          type:'CART_UPDATED',
+          payload:{
+            totalItem:totalItem
+          }
+        });
+    }).catch(err=>{
+        console.log(err)
+    })
 }
