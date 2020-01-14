@@ -1,2 +1,2 @@
 # Ecom
-E-Commerece application using Mean, K8
+E-Commerece application using Mern, K8
