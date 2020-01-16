@@ -135,3 +135,41 @@ export const refreshCartTotal = () => dispatch => {
         console.log(err)
     })
 }
+
+export const getOrderRequested = (orderId, email, phoneNum) => dispatch => {
+    // console.log('get the Order Request....!!!!')
+    axios.get('/api/ot/myorders',{
+        params: {
+            id: orderId,
+            email:email,
+            phone:phoneNum
+        }
+      }).then(resp=>{
+        dispatch({
+          type:'ORDER_TRACKING_UPDATED',
+          payload:{
+            orderTracking:resp.data.myOrder
+          }
+        });
+    }).catch(error=>{
+        console.log(error.response.status)
+    if(error.response.status===404){
+        dispatch({
+            type:'INFO_ALERT',
+            payload:{
+              display:true,
+              type:'error',
+              alertMsg:'Could not find any order for a given details.'
+            }
+          });
+        dispatch({
+            type:'ORDER_TRACKING_UPDATED',
+            payload:{
+                orderTracking:{}
+            }
+        });  
+    } else {
+        console.log(error.msg)
+    }
+    });
+}

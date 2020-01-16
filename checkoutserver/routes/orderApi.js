@@ -31,6 +31,7 @@ router.get('/cartDetails',async(req, res)=>{
     if(cart.ItemList && cart.ItemList.length > 0){
         skus = cart.ItemList.map(e=>e.sku);
         skuDetails = (await cartService.getSkuDetails(skus)).data;
+        // console.log(skuDetails)
         await cartService.updateOrderSkuDetails(cart, skuDetails);
         await cartService.getOrderPricing(cart, skuDetails);
         cartService.saveCart(cart)   

@@ -53,6 +53,11 @@ class SearchBar extends Component {
     }
 
     render(){
+      // font-style: oblique;
+      // font-weight: bolder;
+      // font-size: x-large;
+      // font-family: cursive;
+      // font-variant-caps: titling-caps;
       return (
         <div className="row justify-content-md-center " style={{padding:'10px', background:'#28B463', boxShadow:'0 4px 8px 0 rgba(28,32,36,.2)'}}>
           <div className="col col-lg-2">

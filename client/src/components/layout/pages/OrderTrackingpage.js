@@ -1,8 +1,7 @@
 import React, {Component}from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { loadOrderConfirmation} from '../../../action/checkoutAction'
-import { refreshCartTotal } from '../../../action/commonAction'
+import { getOrderRequested} from '../../../action/commonAction'
 import Utils from '../../../utils/utils'
 
 
@@ -62,12 +61,26 @@ const OrderInfo = (data) => {
 }
 
 
-class OrderConfirmationpage extends Component {
+class OrderTrackingpage extends Component {
 
     constructor(props){
         super(props)
         this.openProductPage = this.openProductPage.bind(this)
+        this.submitOrderRequest = this.submitOrderRequest.bind(this)
         this.state =  null
+    }
+
+    submitOrderRequest = (event) => {
+        // Prevent default behavior
+        event.preventDefault();
+        const data = new FormData(event.target);
+        //data.forEach(f=>console.log(f))
+        // Access FormData fields with `data.get(fieldName)`
+        this.props.getOrderRequested(
+            data.get('orderNum'),
+            data.get('email'),
+            data.get('phoneNum')
+        )
     }
 
     openProductPage = (e) => {
@@ -80,42 +93,65 @@ class OrderConfirmationpage extends Component {
         }
     }
 
-    componentDidMount = () => {
-        this.props.refreshCartTotal();
-        this._asyncRequest = loadOrderConfirmation(this.props.location).then(
-            externalData => {
-              this._asyncRequest = null;
-              if(externalData.data.REDIRECT_URL != null){
-                this.props.history.push(externalData.data.REDIRECT_URL)
-              } else {
-                this.setState({order:externalData.data})
-              }
-            }
-        );
-    }
-
-    componentWillUnmount() {
-        if (this._asyncRequest) {
-          this._asyncRequest.cancel();
-        }
-    }
-
     componentWillReceiveProps(nextProps){
-        if(nextProps.checkout.order){
-            this.setState({order:nextProps.checkout.order})
+        if(nextProps.common.orderTracking){
+            this.setState({
+                order:nextProps.common.orderTracking
+            })
         }
     }
 
      render() {
-       return(this.state && this.state.order &&
-           <div>
+         var displayOrderDetails = this.state && this.state.order && Object.keys(this.state.order).length > 0;
+       return(<div>                
+                {!displayOrderDetails && <span>
+                        <br/><br/><br/>
+                        <div className="row justify-content-md-center">
+                            <div className="col col-lg-8" style={{textAlign:'left', boxShadow: '0 4px 8px 0 rgba(28,32,36,.2)'}}>
+                                <br/>
+                                <h5>Order Search</h5>
+                                <hr/>
+                                <form onSubmit={this.submitOrderRequest}>
+                                    <br/>
+                                    <div className="row justify-content-md-center">
+                                        <div className="col col-lg-8" style={{textAlign:'left'}}>
+                                            <input type='input' name='orderNum' style={{width:'80%'}}  placeholder='Order Number' required/>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <div className="row justify-content-md-center">
+                                        <div className="col col-lg-8" style={{textAlign:'left'}}>
+                                            <input type='emal' name='email' style={{width:'80%'}} placeholder='Email' required/>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <div className="row justify-content-md-center">
+                                        <div className="col col-lg-8" style={{textAlign:'left'}}>
+                                            <input type='number' name='phoneNum' style={{width:'80%'}} placeholder='Phone Number' required min='6000000000' max='99999999999'/>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <br/>
+                                    <div className="row justify-content-md-center">
+                                        <div className="col col-lg-8" style={{textAlign:'center'}}>
+                                            <input type='submit' value='Find My Order' name='Submit' style={{width:'50%'}}/>
+                                        </div>
+                                    </div>
+                                    <br/><br/><br/>
+                                </form>
+                            </div>
+                        </div>
+                    </span>   
+                }
+               {displayOrderDetails &&
+               <span>
                <br/><br/><br/>
                <div className="row justify-content-md-center">
                     <div className="col col-lg-8" style={{textAlign:'left'}}>
                         Hey <span style={{textTransform: "capitalize"}}>{this.state.order.PersonalInfo.fname}</span>&nbsp;<span style={{textTransform: "capitalize"}}>{this.state.order.PersonalInfo.lname}</span>,
                         <br/><br/><br/>
-                        <h5>Your order is confrimed!</h5>
-                        Thanks for shopping! Your order is in-progress.<br/>we'll send you as email of the progress related to its shipping. Continue Shopping <a href='/'>here</a>
+                        <h5>Your order is as below</h5>
+                        Thanks for shopping! Your order is in-progress.<br/>we'll send you as email of the progress related to its shipping.
                         <br/><br/>
                         <div className="row justify-content-md-center" style={{borderBottom:'black solid 1px'}}>
                             <div className="col col-lg-7" style={{textAlign:'left'}}>
@@ -137,14 +173,15 @@ class OrderConfirmationpage extends Component {
                     </div>
                 </div>
                 <br/><br/><br/><br/><br/><br/>
+                </span>}
            </div>
        )
      }
 }
 
 function mapStateToProps(state){
-    return {checkout:state.checkout};
+    return {common:state.common};
   }
 
 
-export default connect(mapStateToProps,{refreshCartTotal})(withRouter(OrderConfirmationpage));
+export default connect(mapStateToProps,{getOrderRequested})(withRouter(OrderTrackingpage));

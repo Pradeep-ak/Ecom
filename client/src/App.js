@@ -20,7 +20,8 @@ import AlertBar from './components/Alertbar'
 import Cartpage from './components/layout/pages/Cartpage'
 import Checkoutpage from './components/layout/pages/Checkoutpage'
 import Review from './components/layout/pages/Reviewpage'
-import OrderConfirmation from './components/layout/pages/OrderConfirmationpage' 
+import OrderConfirmation from './components/layout/pages/OrderConfirmationpage'
+import OrderTracking from './components/layout/pages/OrderTrackingpage' 
 
 class App extends Component {
   render(){
@@ -45,6 +46,7 @@ class App extends Component {
                 <Route exact  path="/checkout" component={Checkoutpage}/>
                 <Route exact  path="/review" component={Review}/>
                 <Route exact  path="/oc" component={OrderConfirmation}/>
+                <Route exact  path="/ot" component={OrderTracking}/>
               </article>
               <Sitefooter />
             </div>

@@ -46,7 +46,7 @@ class Menubar extends Component {
         return(
             menu &&
             <div className="row" style={{ boxShadow: '0 4px 8px 0 rgba(28,32,36,.2)' }}>
-                <div className="col-md-auto " style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
+                <div className="col-md-auto " style={{ maxWidth: '1440px', margin: '0 auto', width: '50%' }}>
                     <nav className="navbar navbar-expand-lg navbar-light">
                         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                             <span className="navbar-toggler-icon"></span>
@@ -75,6 +75,9 @@ class Menubar extends Component {
                             </ul>
                         </div>
                     </nav>
+                </div>
+                <div className="col-md-auto" style={{ maxWidth: '1440px', margin: '0 auto', width: '25%', float:'left'}}>
+                    <a className="nav-link" style={{paddingTop:'1rem', color:'rgba(0,0,0,.5)'}} href="/ot">Order Tracking</a>
                 </div>
             </div>
         )

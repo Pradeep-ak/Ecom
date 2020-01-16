@@ -4,6 +4,7 @@ let middleware = require('./utils/middleware');
 const bodyParser = require('body-parser');
 const orderApi = require('./routes/orderApi')
 const checkoutApi = require('./routes/checkoutApi')
+const trackingApi = require('./routes/trackingApi')
 const ShippingRepo = require('./models/shipping')
 var shippingMethodRepo = require('./config/shippingMethods.json')
 
@@ -28,7 +29,9 @@ app.get('/api/o/ping',(req, res)=>{
 });
 
 app.use('/api/o/checkout/',middleware.checkToken,checkoutApi);
+app.use('/api/ot/',middleware.checkToken,trackingApi);
 app.use('/api/o/',middleware.checkToken,orderApi);
+
 
 app.post('/api/config/loadShippingMethod', (req, res)=>{
     ShippingRepo.create(shippingMethodRepo)
