@@ -33,7 +33,7 @@ router.post('/refresh',(req, res)=>{
     if(req.body.refresh_token){
         authService.getRefreshToken(req.body.refresh_token)
         .then(data => {
-            console.log('Refresh Token Hnalder : ' + data)
+            //console.log('Refresh Token Handler : ' + data)
             if(data){
                 var accId = data.get('accId');
                 user = data.get('loggedInStatus')===true?{Role:'R1'}:{Role:'R2'};

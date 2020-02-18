@@ -8,9 +8,11 @@ const router = express.Router();
 router.get('/:dept/:seoName', async (req, res)=>{
     try{
         var catRepo = await Category.find({id:req.query.id}).exec();
-        
+        currentPage = 1;
+        currentPage = req.query.pg === undefined ? currentPage:parseInt(req.query.pg);
+
         var query = client.query().q(new Utils().getQuery(req.query))
-        .start(0).rows(24).facetQuery({
+        .start((currentPage-1)*24).rows(24).facetQuery({
             on: true,
             field:['brand','color','size','ITEM_TYPE','PRODUCT_TYPE','price_type']
         });
@@ -119,5 +121,4 @@ router.get('/:dept/:seoName', async (req, res)=>{
 
 // router.get('/',(req, res) => res.json());
 
-    
 module.exports=router;

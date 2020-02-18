@@ -128,7 +128,7 @@ class Categorypage extends Component {
                     <div className="col col-lg-2" style={{textAlign:"left"}}>
                         <div className="card"  style={{boxShadow: '0 4px 8px 0 rgba(28,32,36,.2)'}}>
                                 {this.state.Dim.sort((a,b)=>a.index>b.index).map((e,i)=>{
-                                    return <section key={i}>
+                                    return <section key={i} style={{padding:'3px'}}>
                                         <div style={{margin:'0', borderBottom:'1px solid'}}>
                                             <a data-toggle="collapse" href={"#collapseExample"+i} role="button" aria-expanded="false" aria-controls={"collapseExample"+i} style={{textDecoration:'none'}}>
                                                 <div style={{width: '100%', textAlign: 'start', fontWeight: 'bolder', color: 'black', marginLeft: '0.5rem', textTransform: "capitalize"}}>{e.dimName}</div>

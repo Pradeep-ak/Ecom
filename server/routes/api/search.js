@@ -5,39 +5,45 @@ const Utils = require('../../utils')
 const router = express.Router();
 
 router.get('/:seoName', async (req, res)=>{
+    currentPage = 1;
     try{
         console.log('Search Term : ' + req.query.searchTerm);
         //res.status(200).json(req.query.s)
         var param = [];
+        currentPage = req.query.pg === undefined ? currentPage:parseInt(req.query.pg);
 
         //Add field against which search is performed in edismax query
-        param.pushArray(new Utils().getQf(['description^0.5', 'name^1','keyword^2', 'id^3']));
+        param.pushArray(new Utils().getQf(['description^0.5', 'name^4','keyword^1', 'id^3']));
         
+        mm = (req.query.searchTerm.split(" ").length-1)===0?1:req.query.searchTerm.split(" ").length-1;
         //Add MM to the edismax query
-        param.pushArray(new Utils().getMM(req.query.searchTerm.split(" ").length));
-        
+        param.pushArray(new Utils().getMM(mm));
+        //param.pushArray(new Utils().getMM(2));
+
         //Add the fiter value.
         param.pushArray(new Utils().getFq(req.query));
 
         //Add the Sort value based in search terms found count in Name Fields.
         param.pushArray(new Utils().getSort(req.query.searchTerm));
         
+        searchTerm = req.query.searchTerm.split(" ").length===1?req.query.searchTerm:'*:'+req.query.searchTerm;
         //Run the query in the solr indexing.
-        var query = client.query().q(req.query.searchTerm)
+        var query = client.query().q(searchTerm)
         .edismax()
         .addParams(param)
-        .start(0).rows(24)
+        .start((currentPage-1)*24).rows(24)
         .facetQuery({
             on: true,
             field:['brand','Bed_Linen_Type','Bed_Size','Fabric_Content','Care','FABRIC_CONTENT','ITEM_TYPE','PRODUCT_TYPE','Features','Measurements','Base_Material','Neckline','Sleeve_Length','Apparel_Length','Sleeve_Style','Fabric_Description','FIT','Assembly','DELIVERY_TYPE','price_type','size','color']
         });
-
-        const result = await client.search(query);
+        
         ProductCount = 0;
         products = []
         try {
             const result = await client.search(query);
             //console.log('Response:', result);
+
+            //Handle Single results.
             ProductCount = result.response.numFound;
             if(ProductCount===1){
                 var id = result.response.docs[0].id
@@ -46,6 +52,8 @@ router.get('/:seoName', async (req, res)=>{
                 res.status(200).json({"REDIRECT_URL":redirecturl})
                 return;
             }
+
+            //Product Sections
             products = result.response.docs.map((e,i) => {
                 // console.log('Response:', e);
                 var IsPirce = false
@@ -76,6 +84,7 @@ router.get('/:seoName', async (req, res)=>{
                 }
             });
 
+            // Dimension Section
             keys = Object.keys(result.facet_counts.facet_fields);
             dim =[]
             for (let index = 0, k=0; index < Object.keys(result.facet_counts.facet_fields).length; index++) {
@@ -113,6 +122,9 @@ router.get('/:seoName', async (req, res)=>{
                 } 
                 k++;               
             }
+            // Pagination Section
+            paginationInfo={}
+
 
             //console.log(dim)
          } catch(e) {

@@ -60,6 +60,13 @@ const OrderInfo = (data) => {
     </span>
 }
 
+const PersonalInfoBar = (data) => {
+    return <span>
+        <b><span style={{textTransform: "capitalize"}}>{data.PI.fname}</span>&nbsp;<span style={{textTransform: "capitalize"}}>{data.PI.lname}</span></b><br/>
+        <span>{data.PI.email}</span><br/>
+        <span>{data.PI.phoneNumber}</span>
+    </span>
+}
 
 class OrderTrackingpage extends Component {
 
@@ -157,6 +164,7 @@ class OrderTrackingpage extends Component {
                             <div className="col col-lg-7" style={{textAlign:'left'}}>
                                 <h5>Order Information</h5>
                                 <b>Order Number : </b>{this.state.order.Order_id}
+                                <br/><PersonalInfoBar PI={this.state.order.PersonalInfo}/>
                             </div>
                             <div className="col col-lg-1" style={{textAlign:'left'}}>
                             </div> 

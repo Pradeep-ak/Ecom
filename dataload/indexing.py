@@ -13,6 +13,8 @@ solr = pysolr.Solr('http://{}:{}/solr/{}/'.format(solr_hostname, solr_port, solr
 
 
 def getAttrName(txt=''):
+    if (txt is None):
+        return txt
     return txt.strip().replace(' ','_')
 
 def getMultiValue(values, value):
@@ -23,10 +25,13 @@ def getMultiValue(values, value):
     return values
 
 def getValue(value=''):
-    value = value.strip().replace(' ,', ',').replace(', ',',')
-    # value = value.replace(' ,', ',')
-    # value = value.replace(', ',',')
-    return value.replace(' ','_')+" "
+    if (value is None):
+        return value
+    value_split = value.split('%')
+    value_split = filter(lambda x:'%' not in x, value_split)
+    value = ",".join(value_split)
+    value = value.strip().replace(' ,', ',').replace(', ',',').replace('-','_').replace('/','_').replace(' ','_')
+    return value+" "
 
 
 mongo = mongoDAO()
@@ -103,7 +108,8 @@ def getProdRecord(prod, cat_pp):
 
     if 'attributes' in prod:
         for attr in prod.get('attributes'):
-            solrRec[getAttrName(attr.get('name'))] = getValue(attr.get('value'))
+            if attr.get('value'):
+                solrRec[getAttrName(attr.get('name'))] = getValue(attr.get('value'))
 
     if 'skus' in prod:
         # print(len(prod.get('skus')))
@@ -120,15 +126,21 @@ def getProdRecord(prod, cat_pp):
                         solrRec[attrName] = getMultiValue(solrRec.get(attrName), getValue(option.get('value')))
     return solrRec
 
+def checkEven(prod):
+    if prod.get('id')=='5830541':
+        return True
+    else:
+        return False
 
 Records = list()
+#prodLst = filter(checkEven, prodLst)
 with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
     future_to_url = {executor.submit(getProdRecord, prod, cat2PP): prod for prod in prodLst}
     for future in concurrent.futures.as_completed(future_to_url):
         stats = future_to_url[future]
         try:
             data = future.result()
-            print(data)
+            #print(data)
             Records.append(data)
         except Exception as exc:
             print('%r generated an exception: %s' % (stats, exc))

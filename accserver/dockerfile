@@ -18,8 +18,8 @@ RUN npm install
 # Bundle app source
 COPY . .
 
-# ADD docker/wait-for-it.sh /wait-for-it.sh
-# RUN bash -c 'chmod 777 /wait-for-it.sh'
+ADD docker/wait-for-it.sh /wait-for-it.sh
+RUN bash -c 'chmod 777 /wait-for-it.sh'
 
 EXPOSE 7000
 # CMD [ "node", "app.js" ]

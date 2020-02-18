@@ -67,7 +67,7 @@ class SearchBar extends Component {
             {new utils().isSearchEnabled(this.props.location) && <form method='get' action='/s/seoname'>
               <div className="input-group">
                   <input type="text" className="form-control" placeholder="Search for..."  name="searchTerm"
-                  value={this.state.searchTerm} onChange={this.onChange} required />
+                  value={this.state.searchTerm} onChange={this.onChange} required maxLength='50'/>
                   <span className="input-group-btn" style={{paddingLeft:'10px'}}>
                     <button className="btn btn-default" type="submit" style={{borderColor:'black'}} >Go!</button>
                   </span>

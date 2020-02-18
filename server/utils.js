@@ -33,6 +33,12 @@ Utils.prototype.getMM = function (params) {
         }];
 };
 Utils.prototype.getSort = function (params) {
+    // return params.split(" ").map(e=>{
+    //     return {
+    //         'field' : 'sort',
+    //         'value' : 'termfreq(name, "'+e+'")desc'
+    //     }
+    // })
     return [{
             'field' : 'sort',
             'value' : 'termfreq(name, "'+params+'")desc'
@@ -45,7 +51,7 @@ Utils.prototype.getFq = function (params) {
     query = '';
     for (let index = 0; index < Object.keys(params).length; index++) {
         const ele = Object.keys(params)[index];
-        if (ele === 'searchTerm')
+        if (ele === 'searchTerm' || ele === 'pg')
             continue;
 
         if(params[ele] instanceof Array){
@@ -73,11 +79,13 @@ function getDimMapping(val) {
     }
     return val;
 };
-
+//It's used in catgeory page to get the Solr Query.
 Utils.prototype.getQuery = (param) => {
     query = '';
     for (let index = 0; index < Object.keys(param).length; index++) {
         const ele = Object.keys(param)[index];
+        if (ele === 'searchTerm' || ele === 'pg')
+            continue;
         if(param[ele] instanceof Array){
             var paramVal = param[ele];
             for (let count = 0; count < paramVal.length; count++) {
@@ -91,10 +99,15 @@ Utils.prototype.getQuery = (param) => {
     return query.slice(0, -5);
   };
 
+//It is used to construct the URL for Dim values.
 Utils.prototype.addParamToQuery = (uri, param, name, value) => {
     query = '?';
     for (let index = 0; index < Object.keys(param).length; index++) {
         const ele = Object.keys(param)[index];
+        //Skip the pagation param from Dim selection URL
+        if (ele === 'pg')
+            continue;
+
         if(param[ele] instanceof Array){
             var paramVal = param[ele];
             for (let count = 0; count < paramVal.length; count++) {
@@ -116,6 +129,10 @@ Utils.prototype.addParamToQuery = (uri, param, name, value) => {
         const ele = Object.keys(param)[index];
         if(param[ele] instanceof Array){
             var paramVal = param[ele];
+            //Skip the pagation param from Dim selection URL
+            if (ele === 'pg')
+                continue;
+
             for (let count = 0; count < paramVal.length; count++) {
                 const element = paramVal[count];
                 if(name === ele && element === value){
