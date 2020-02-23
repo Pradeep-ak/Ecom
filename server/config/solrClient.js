@@ -5,7 +5,7 @@ require('log4js').getLogger('solr-node').level = 'DEBUG';
 class ExtendedSolr extends SolrNode{
 
 loadDimensionVal(dimVal){
-    var query = client. query().q('*:*').facetQuery({
+    var query = client.query().q('*:*').facetQuery({
         on: true,
         field:dimVal
     });
@@ -17,8 +17,8 @@ loadDimensionVal(dimVal){
         }
         console.log('Response:', Object.keys(result.facet_counts.facet_fields));
 
-        });
-}
+        })  ;
+    }
 }
 
 

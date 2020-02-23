@@ -95,10 +95,26 @@ const SearchResults = (data) => {
 </ul>
 }
 
-const PaginationPanel = (data) =>{
-    return '1,2,3...'
+const PaginationPanel = (data) => {
+    var currentPg = '', nextPg='', prevPg='';
+    if(data.pgInfo && (data.pgInfo.previousPage || data.pgInfo.nextPage)){
+        currentPg = <div style={{float:"right"}}><b>{data.pgInfo.currentPage}</b>,</div>
+    }
+    if(data.pgInfo && data.pgInfo.nextPage){
+        nextPg = <div style={{float:"right"}}><a href={data.pgInfo.nextPageUrl} onClick={data.updatePage}><b>{data.pgInfo.nextPage}</b></a></div>
+    }
+    if(data.pgInfo && data.pgInfo.previousPage){
+        prevPg = <div style={{float:"right"}}><a href={data.pgInfo.previousPageUrl} onClick={data.updatePage}><b>{data.pgInfo.previousPage}</b></a>,</div>
+    }
+return <span>{nextPg}{currentPg}{prevPg}</span>
 }
 
+const SelectPanel = (data) => {
+    var removePanal = data.selectedDim.map((e,i)=>{
+            return <button key={i} type="button" className="btn btn-success"  style={{marginLeft:"2px", marginRight:"2px", textTransform:"capitalize"}} value={e.removeURL} onClick={data.removeDim} title={e.dimName}>{e.dimVal} X</button>
+        })
+    return <span>{removePanal}</span>
+}
 
 class Searchpage extends Component {
     constructor(){
@@ -106,12 +122,26 @@ class Searchpage extends Component {
         this.state = {}
         this.onClick = this.onClick.bind(this);
         this.selectLabel=this.selectLabel.bind(this);
+        this.onUpdatePage = this.onUpdatePage.bind(this);
+        this.removeDim = this.removeDim.bind(this);
     }
 
     onClick(e){
         // this.setState({'sort':e.target.value})
         console.log('==> '+ e.target.value)
     }
+
+    removeDim(e){
+        e.preventDefault();
+        this.props.updateSearch(e.target.value, this.props.history);
+    }
+
+    onUpdatePage(e){
+        e.preventDefault();
+        let path = e.target.parentElement.getAttribute('href');
+        this.props.updateSearch(path, this.props.history);
+    }
+
     selectLabel(e){
         // console.log('==> '+ e.target.checked)
         this.props.updateSearch(e.target.value, this.props.history);
@@ -163,8 +193,11 @@ class Searchpage extends Component {
 
                 {this.state.ProductCount > 0 && <span>
                 <div className="row justify-content-md-center" style={{paddingBottom:'5px'}}>
-                    <div className="col col-lg-9" style={{textAlign:"left"}}>
+                    <div className="col col-lg-2" style={{textAlign:"left"}}>
                         {this.state.ProductCount} products found.
+                    </div>
+                    <div className="col col-lg-7" style={{textAlign:"left"}}>
+                        <SelectPanel selectedDim={this.state.selectedDim} removeDim={this.removeDim}/>
                     </div>
                     <div className="col col-lg-3" style={{textAlign:"right"}}>
                         <SortOption defaultValue={this.state.sort} sortValues={this.state.sortOption} selectOption={this.onClick}/>
@@ -180,7 +213,7 @@ class Searchpage extends Component {
                 </div>         
                 <div className="row justify-content-md-center">
                     <div className="col col-lg-12" style={{textAlign:'end'}}>
-                        <PaginationPanel />
+                        <PaginationPanel pgInfo={this.state.paginationInfo} updatePage={this.onUpdatePage}/>
                     </div>
                 </div></span>}
             </div>

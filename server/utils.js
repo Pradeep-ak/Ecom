@@ -112,14 +112,18 @@ Utils.prototype.addParamToQuery = (uri, param, name, value) => {
             var paramVal = param[ele];
             for (let count = 0; count < paramVal.length; count++) {
                 const element = paramVal[count];
-                console.log('param' + element)
+                // console.log('param' + element)
                 query = query + ele+'='+element+'&'    
             }
         }else{
             query = query + ele+'='+param[ele]+'&'    
         }
     }
-    query = query + name + '=' + value
+    if(name != null){
+        query = query + name + '=' + value
+    }else{
+        query = query.slice(0, -1);
+    }
     return uri+query;
   };
 
@@ -173,6 +177,25 @@ Utils.prototype.isSelected = (param, name, value) => {
     }
     return false;
   };
+
+Utils.prototype.previousPage = (currentPage) => {
+    return (currentPage>1)?currentPage-1:undefined
+}
+Utils.prototype.previousPageUrl = (currentPage, uri, param) => {
+    return (currentPage>1)? new Utils().addParamToQuery(uri, param, 'pg', (currentPage-1)) : undefined
+}
+Utils.prototype.nextPage = (currentPage, TotalProduct, eachPageCount) => {
+    var maxPage = Math.floor(TotalProduct/eachPageCount);
+    return (currentPage<(maxPage+1))?currentPage+1:undefined
+}
+Utils.prototype.nextPageUrl = (currentPage, TotalProduct, eachPageCount, uri, param) => {
+    var maxPage = Math.floor(TotalProduct/eachPageCount);
+    return (currentPage<(maxPage+1))? new Utils().addParamToQuery(uri, param, 'pg', (currentPage+1)) : undefined
+}
+Utils.prototype.totalPage = (currentPage, TotalProduct, eachPageCount) => {
+    var maxPage = Math.floor(TotalProduct/eachPageCount);
+    return maxPage+1
+}
 
 Utils.prototype.convertToSlug = (Text) => {
 return Text

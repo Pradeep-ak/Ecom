@@ -4,6 +4,20 @@ import { withRouter } from 'react-router-dom';
 import { fetchCategory } from '../../../action/categoryAction'
 import { updateCategory } from '../../../action/categoryAction'
 
+const PaginationPanel = (data) => {
+    var currentPg = '', nextPg='', prevPg='';
+    if(data.pgInfo && (data.pgInfo.previousPage || data.pgInfo.nextPage)){
+        currentPg = <div style={{float:"right"}}><b>{data.pgInfo.currentPage}</b>,</div>
+    }
+    if(data.pgInfo && data.pgInfo.nextPage){
+        nextPg = <div style={{float:"right"}}><a href={data.pgInfo.nextPageUrl} onClick={data.updatePage}><b>{data.pgInfo.nextPage}</b></a></div>
+    }
+    if(data.pgInfo && data.pgInfo.previousPage){
+        prevPg = <div style={{float:"right"}}><a href={data.pgInfo.previousPageUrl} onClick={data.updatePage}><b>{data.pgInfo.previousPage}</b></a>,</div>
+    }
+return <span>{nextPg}{currentPg}{prevPg}</span>
+}
+
 class Categorypage extends Component {
     constructor(){
         super()
@@ -57,23 +71,23 @@ class Categorypage extends Component {
         }
         this.onClick = this.onClick.bind(this);
         this.selectLabel=this.selectLabel.bind(this);
+        this.onUpdatePage = this.onUpdatePage.bind(this);
     }
 
     onClick(e){
         this.setState({'sort':e.target.value})
         console.log('==> '+ e.target.value)
     }
+
+    onUpdatePage(e){
+        e.preventDefault();
+        let path = e.target.parentElement.getAttribute('href');
+        this.props.updateCategory(path, this.props.history);
+    }
+
     selectLabel(e){
         console.log('==> '+ e.target.checked)
         this.props.updateCategory(e.target.value, this.props.history);
-        // this.props.history.push(e.target.value);
-        // this._asyncRequest = fetchCategory(this.props.location).then(
-        //     externalData => {
-        //       this._asyncRequest = null;
-        //       console.log(externalData.data)
-        //       this.setState(externalData.data);
-        //     }
-        //   );
     }
 
     componentDidMount = ()=> {
@@ -203,7 +217,7 @@ class Categorypage extends Component {
                 </div>         
                 <div className="row justify-content-md-center">
                     <div className="col col-lg-12" style={{textAlign:'end'}}>
-                        1,2,3...
+                        <PaginationPanel pgInfo={this.state.paginationInfo} updatePage={this.onUpdatePage}/>
                     </div>
                 </div>
             </div>

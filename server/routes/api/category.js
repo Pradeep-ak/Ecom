@@ -91,6 +91,37 @@ router.get('/:dept/:seoName', async (req, res)=>{
                 k++;               
             }
 
+            // Pagination Section
+            paginationInfo={
+                previousPage: new Utils().previousPage(currentPage),
+                previousPageUrl: new Utils().previousPageUrl(currentPage, '/c/'+req.params.dept+'/'+req.params.seoName, req.query),
+                currentPage:currentPage,
+                nextPage: new Utils().nextPage(currentPage, ProductCount, 24),
+                nextPageUrl:  new Utils().nextPageUrl(currentPage, ProductCount, 24, '/c/'+req.params.dept+'/'+req.params.seoName, req.query),
+                TotalPage: new Utils().totalPage(currentPage, ProductCount, 24)
+            }
+
+            var selectedDim = []
+            if(result.responseHeader.params.fq){
+                if(result.responseHeader.params.fq instanceof Array){
+                    var selectedDim=result.responseHeader.params.fq.map(e=>{
+                        _dim = e.split(':');
+                        return {
+                            dimName:_dim[0],
+                            dimVal:_dim[1],
+                            removeURL:new Utils().removeParamToQuery('/s/'+req.params.seoName, req.query, _dim[0], _dim[1])
+                        }
+                    })
+                } else{
+                    _dim = result.responseHeader.params.fq.split(':');
+                    var selectedDim = [{
+                        dimName:_dim[0],
+                        dimVal:_dim[1],
+                        removeURL:new Utils().removeParamToQuery('/s/'+req.params.seoName, req.query, _dim[0], _dim[1])
+                    }]
+                }
+            }
+
             //console.log(dim)
          } catch(e) {
             console.error(e);
@@ -110,7 +141,9 @@ router.get('/:dept/:seoName', async (req, res)=>{
             CategoryName:catRepo[0].get('name'),
             ProductCount:ProductCount,
             Products:products,
-            Dim:dim
+            Dim:dim,
+            paginationInfo:paginationInfo,
+            selectedDim:selectedDim
         }
         res.status(200).json(response)
     }catch(err){

@@ -27,6 +27,7 @@ router.get('/:seoName', async (req, res)=>{
         param.pushArray(new Utils().getSort(req.query.searchTerm));
         
         searchTerm = req.query.searchTerm.split(" ").length===1?req.query.searchTerm:'*:'+req.query.searchTerm;
+        
         //Run the query in the solr indexing.
         var query = client.query().q(searchTerm)
         .edismax()
@@ -34,7 +35,7 @@ router.get('/:seoName', async (req, res)=>{
         .start((currentPage-1)*24).rows(24)
         .facetQuery({
             on: true,
-            field:['brand','Bed_Linen_Type','Bed_Size','Fabric_Content','Care','FABRIC_CONTENT','ITEM_TYPE','PRODUCT_TYPE','Features','Measurements','Base_Material','Neckline','Sleeve_Length','Apparel_Length','Sleeve_Style','Fabric_Description','FIT','Assembly','DELIVERY_TYPE','price_type','size','color']
+            field:['brand','Bed_Linen_Type','Bed_Size','Fabric_Content','Care','ITEM_TYPE','PRODUCT_TYPE','Features','Measurements','Base_Material','Neckline','Sleeve_Length','Apparel_Length','Sleeve_Style','Fabric_Description','FIT','Assembly','DELIVERY_TYPE','price_type','size','color']
         });
         
         ProductCount = 0;
@@ -122,9 +123,36 @@ router.get('/:seoName', async (req, res)=>{
                 } 
                 k++;               
             }
-            // Pagination Section
-            paginationInfo={}
 
+            // Pagination Section
+            paginationInfo={
+                previousPage: new Utils().previousPage(currentPage),
+                previousPageUrl: new Utils().previousPageUrl(currentPage, '/s/'+req.params.seoName, req.query),
+                currentPage:currentPage,
+                nextPage: new Utils().nextPage(currentPage, ProductCount, 24),
+                nextPageUrl:  new Utils().nextPageUrl(currentPage, ProductCount, 24, '/s/'+req.params.seoName, req.query),
+                TotalPage: new Utils().totalPage(currentPage, ProductCount, 24)
+            }
+            var selectedDim = []
+            if(result.responseHeader.params.fq){
+                if(result.responseHeader.params.fq instanceof Array){
+                    var selectedDim=result.responseHeader.params.fq.map(e=>{
+                        _dim = e.split(':');
+                        return {
+                            dimName:_dim[0],
+                            dimVal:_dim[1],
+                            removeURL:new Utils().removeParamToQuery('/s/'+req.params.seoName, req.query, _dim[0], _dim[1])
+                        }
+                    })
+                } else{
+                    _dim = result.responseHeader.params.fq.split(':');
+                    var selectedDim = [{
+                        dimName:_dim[0],
+                        dimVal:_dim[1],
+                        removeURL:new Utils().removeParamToQuery('/s/'+req.params.seoName, req.query, _dim[0], _dim[1])
+                    }]
+                }
+            }
 
             //console.log(dim)
          } catch(e) {
@@ -144,7 +172,9 @@ router.get('/:seoName', async (req, res)=>{
             SearchTerm:req.query.searchTerm,
             ProductCount:ProductCount,
             Products:products,
-            Dim:dim
+            Dim:dim,
+            paginationInfo:paginationInfo,
+            selectedDim:selectedDim
         }
         res.status(200).json(response)
     }catch(err){

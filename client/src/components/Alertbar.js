@@ -22,7 +22,7 @@ class AlertBar extends Component {
     }
     
     componentWillReceiveProps = nextProps => {
-        console.log(nextProps.alert.alertMsg)
+        // console.log(nextProps.alert.alertMsg)
         this.setState({
             display:nextProps.alert.display,
             type:nextProps.alert.type,

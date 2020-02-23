@@ -4,12 +4,12 @@ import { SEARCH_UPDATE_REQUEST } from '.'
 import Utils from '../utils/utils';
 
 export const fetchSearchResults = path => {
-  console.log(path)
+  // console.log(path)
   return axios.get('/api'+path.pathname+path.search);
 }
 
 export const updateSearch = (path, history )=> dispatch => {
-  console.log('path' + path)
+  // console.log('path' + path)
   axios.get('/api'+ path)
   .then(response => {
     if(response.data.REDIRECT_URL != null){
@@ -20,9 +20,10 @@ export const updateSearch = (path, history )=> dispatch => {
             payload: response.data
         })
     }  
-  }).catch(
-      console.log('Error in the Search Query.')
-      );    
+  }).catch((err) => {
+    console.log(err);
+    console.log('Error in the Search Query.')
+  });    
   history.push(path);
   // return axios.get('/api'+path.pathname+path.search);
 }
