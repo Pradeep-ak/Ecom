@@ -186,11 +186,17 @@ Utils.prototype.previousPageUrl = (currentPage, uri, param) => {
 }
 Utils.prototype.nextPage = (currentPage, TotalProduct, eachPageCount) => {
     var maxPage = Math.floor(TotalProduct/eachPageCount);
-    return (currentPage<(maxPage+1))?currentPage+1:undefined
+    if(Math.floor(TotalProduct%eachPageCount)!=0){
+        maxPage++;
+    }
+    return (currentPage<maxPage)?currentPage+1:undefined
 }
 Utils.prototype.nextPageUrl = (currentPage, TotalProduct, eachPageCount, uri, param) => {
     var maxPage = Math.floor(TotalProduct/eachPageCount);
-    return (currentPage<(maxPage+1))? new Utils().addParamToQuery(uri, param, 'pg', (currentPage+1)) : undefined
+    if(Math.floor(TotalProduct%eachPageCount)!=0){
+        maxPage++;
+    }
+    return (currentPage<maxPage)? new Utils().addParamToQuery(uri, param, 'pg', (currentPage+1)) : undefined
 }
 Utils.prototype.totalPage = (currentPage, TotalProduct, eachPageCount) => {
     var maxPage = Math.floor(TotalProduct/eachPageCount);

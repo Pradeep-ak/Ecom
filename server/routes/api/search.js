@@ -26,10 +26,10 @@ router.get('/:seoName', async (req, res)=>{
         //Add the Sort value based in search terms found count in Name Fields.
         param.pushArray(new Utils().getSort(req.query.searchTerm));
         
-        searchTerm = req.query.searchTerm.split(" ").length===1?req.query.searchTerm:'*:'+req.query.searchTerm;
+        // searchTerm = req.query.searchTerm.split(" ").length===1?req.query.searchTerm:'*:'+req.query.searchTerm;
         
         //Run the query in the solr indexing.
-        var query = client.query().q(searchTerm)
+        var query = client.query().q(req.query.searchTerm)
         .edismax()
         .addParams(param)
         .start((currentPage-1)*24).rows(24)
