@@ -19,7 +19,9 @@ mongoose
     .then(()=>console.log('MongoDB Connected'))
     .catch((e)=>console.log(e));
 
-client.loadDimensionVal(['brand','color'])
+client.loadDimensionVal().then(e=>{
+    app.set("solr_dim_set", e);    
+})
 
 app.set("json spaces", 2);
 app.use(bodyParser.json());

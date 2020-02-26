@@ -73,6 +73,61 @@ Utils.prototype.getFq = function (params) {
     return returnArr;
 };
 
+Utils.prototype.getBoostQuery = function(searchQuery, boostDimVal){
+    returnArr = [];
+    for(var attributename in boostDimVal){
+        console.log(attributename)
+        switch(attributename){
+            case 'brand':
+                boostQ = boostDimVal[attributename].filter(e=>{
+                    //console.log(searchQuery.toLowerCase() + ' = ' + e.toLowerCase() + ' | ' + searchQuery.toLowerCase().includes(e.toLowerCase()))
+                    return searchQuery.toLowerCase().includes(e.toLowerCase())
+                }).map(y=>{
+                    // console.log("y => " + y)
+                    return "brand:\""+y+"\""+"^4";
+                });
+                returnArr.pushArray(boostQ);
+                continue;
+            case 'color':
+                boostQ = boostDimVal[attributename].filter(e=>{
+                    //console.log(searchQuery.toLowerCase() + ' = ' + e.toLowerCase() + ' | ' + searchQuery.toLowerCase().includes(e.toLowerCase()))
+                    return searchQuery.toLowerCase().includes(e.toLowerCase())
+                }).map(y=>{
+                    // console.log("y => " + y)
+                    return "color:\""+y+"\""+"^2";
+                });
+                returnArr.pushArray(boostQ);
+                continue;
+            case 'productType':
+                boostQ = boostDimVal[attributename].filter(e=>{
+                    //console.log(searchQuery.toLowerCase() + ' = ' + e.toLowerCase() + ' | ' + searchQuery.toLowerCase().includes(e.toLowerCase()))
+                    return searchQuery.toLowerCase().includes(e.toLowerCase())
+                }).map(y=>{
+                    // console.log("y => " + y)
+                    return  "PRODUCT_TYPE:\""+y+"\""+"^3";
+                });
+                returnArr.pushArray(boostQ);
+                continue;
+            case 'itemType':
+                boostQ = boostDimVal[attributename].filter(e=>{
+                    //console.log(searchQuery.toLowerCase() + ' = ' + e.toLowerCase() + ' | ' + searchQuery.toLowerCase().includes(e.toLowerCase()))
+                    return searchQuery.toLowerCase().includes(e.toLowerCase())
+                }).map(y=>{
+                    // console.log("y => " + y)
+                    return  "ITEM_TYPE:\""+y+"\""+"^3";
+                });
+                returnArr.pushArray(boostQ);
+                continue;
+        }
+    }
+    console.log(returnArr.join(' '));
+    return {
+        'field' : 'bq',
+        'value' : returnArr.join(' ')
+    }
+    
+}
+
 function getDimMapping(val) {
     if(val==='id'){
         return 'categories';

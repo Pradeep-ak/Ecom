@@ -5,6 +5,7 @@ const Utils = require('../../utils')
 const router = express.Router();
 
 router.get('/:seoName', async (req, res)=>{
+    var app = req.app; // get app object
     currentPage = 1;
     try{
         console.log('Search Term : ' + req.query.searchTerm);
@@ -23,10 +24,16 @@ router.get('/:seoName', async (req, res)=>{
         //Add the fiter value.
         param.pushArray(new Utils().getFq(req.query));
 
-        //Add the Sort value based in search terms found count in Name Fields.
-        param.pushArray(new Utils().getSort(req.query.searchTerm));
-        
-        // searchTerm = req.query.searchTerm.split(" ").length===1?req.query.searchTerm:'*:'+req.query.searchTerm;
+        BoostDimVal = app.get('solr_dim_set');
+        boostArr = new Utils().getBoostQuery(req.query.searchTerm, BoostDimVal);
+        console.log('boostQ = ' + (boostArr.value && boostArr.value.length > 0))
+        if(boostArr.value && boostArr.value.length > 0){
+            param.pushArray([boostArr]);
+            param.pushArray([{'field' : 'sort', 'value' :'score desc'}]);
+        } else {
+            //Add the Sort value based in search terms found count in Name Fields.
+            param.pushArray(new Utils().getSort(req.query.searchTerm));
+        }
         
         //Run the query in the solr indexing.
         var query = client.query().q(req.query.searchTerm)
@@ -140,7 +147,7 @@ router.get('/:seoName', async (req, res)=>{
                         _dim = e.split(':');
                         return {
                             dimName:_dim[0],
-                            dimVal:_dim[1],
+                            dimVal:_dim[1].split("_").join(' ').trim(),
                             removeURL:new Utils().removeParamToQuery('/s/'+req.params.seoName, req.query, _dim[0], _dim[1])
                         }
                     })
@@ -148,7 +155,7 @@ router.get('/:seoName', async (req, res)=>{
                     _dim = result.responseHeader.params.fq.split(':');
                     var selectedDim = [{
                         dimName:_dim[0],
-                        dimVal:_dim[1],
+                        dimVal:_dim[1].split("_").join(' ').trim(),
                         removeURL:new Utils().removeParamToQuery('/s/'+req.params.seoName, req.query, _dim[0], _dim[1])
                     }]
                 }
