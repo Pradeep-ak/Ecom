@@ -2,10 +2,10 @@ const express = require('express');
 const Department = require('../../models/department');
 const router = express.Router();
 
-router.get('/test/',(req, res)=>res.json({msg:'Hello Test Api Working..!!!!'}))
+router.get('/test',(req, res)=>res.json({msg:'Hello Test Api Working..!!!!'}))
 
 //Handler Menu
-router.get('/menu/',async (req, res)=>{
+router.get('/menu',async (req, res)=>{
     try{
         const department = await Department.find({type: "department"})
         res.status(200).json(

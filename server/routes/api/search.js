@@ -9,6 +9,9 @@ router.get('/:seoName', async (req, res)=>{
     currentPage = 1;
     try{
         console.log('Search Term : ' + req.query.searchTerm);
+
+        searchTerm = req.query.searchTerm.trim();
+        
         //res.status(200).json(req.query.s)
         var param = [];
         currentPage = req.query.pg === undefined ? currentPage:parseInt(req.query.pg);
@@ -16,7 +19,7 @@ router.get('/:seoName', async (req, res)=>{
         //Add field against which search is performed in edismax query
         param.pushArray(new Utils().getQf(['description^0.5', 'name^4','keyword^1', 'id^3']));
         
-        mm = (req.query.searchTerm.split(" ").length-1)===0?1:req.query.searchTerm.split(" ").length-1;
+        mm = (searchTerm.split(" ").length-1)===0?1:searchTerm.split(" ").length-1;
         //Add MM to the edismax query
         param.pushArray(new Utils().getMM(mm));
         //param.pushArray(new Utils().getMM(2));
@@ -25,18 +28,19 @@ router.get('/:seoName', async (req, res)=>{
         param.pushArray(new Utils().getFq(req.query));
 
         BoostDimVal = app.get('solr_dim_set');
-        boostArr = new Utils().getBoostQuery(req.query.searchTerm, BoostDimVal);
+        boostArr = new Utils().getBoostQuery(searchTerm, BoostDimVal);
+
         console.log('boostQ = ' + (boostArr.value && boostArr.value.length > 0))
         if(boostArr.value && boostArr.value.length > 0){
             param.pushArray([boostArr]);
             param.pushArray([{'field' : 'sort', 'value' :'score desc'}]);
         } else {
             //Add the Sort value based in search terms found count in Name Fields.
-            param.pushArray(new Utils().getSort(req.query.searchTerm));
+            param.pushArray(new Utils().getSort(searchTerm));
         }
         
         //Run the query in the solr indexing.
-        var query = client.query().q(req.query.searchTerm)
+        var query = client.query().q(searchTerm)
         .edismax()
         .addParams(param)
         .start((currentPage-1)*24).rows(24)
@@ -110,7 +114,7 @@ router.get('/:seoName', async (req, res)=>{
                             url = new Utils().addParamToQuery('/s/'+req.params.seoName, req.query, dimName, dimArr[j])
                         }
                         dimVal[i]={ 
-                            label:dimArr[j].replace('_', ' ').toLowerCase(),
+                            label:dimArr[j].split("_").join(' ').trim().toLowerCase(),
                             selected:selected,
                             count:dimArr[j+1],
                             url: url
@@ -122,7 +126,9 @@ router.get('/:seoName', async (req, res)=>{
                 if(dimVal.length == 0){
                     continue
                 }
-
+                
+                dimVal.sort((a, b) => a.label.localeCompare(b.label));
+                
                 dim[k]={
                     'index':k,
                     'dimName':dimName.replace('_', ' ').toLowerCase(),

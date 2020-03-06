@@ -70,7 +70,7 @@ router.get('/:dept/:seoName', async (req, res)=>{
                             url = new Utils().addParamToQuery('/c/'+req.params.dept+'/'+req.params.seoName, req.query, dimName, dimArr[j])
                         }
                         dimVal[i]={ 
-                            label:dimArr[j].replace('_', ' ').toLowerCase(),
+                            label:dimArr[j].split("_").join(' ').trim().toLowerCase(),
                             selected:selected,
                             count:dimArr[j+1],
                             url: url
@@ -83,6 +83,8 @@ router.get('/:dept/:seoName', async (req, res)=>{
                     continue
                 }
 
+                dimVal.sort((a, b) => a.label.localeCompare(b.label));
+                
                 dim[k]={
                     'index':k,
                     'dimName':dimName.replace('_', ' ').toLowerCase(),
@@ -109,7 +111,7 @@ router.get('/:dept/:seoName', async (req, res)=>{
                         return {
                             dimName:_dim[0],
                             dimVal:_dim[1],
-                            removeURL:new Utils().removeParamToQuery('/s/'+req.params.seoName, req.query, _dim[0], _dim[1])
+                            removeURL:new Utils().removeParamToQuery('/c/'+req.params.dept+'/'+req.params.seoName, req.query, _dim[0], _dim[1])
                         }
                     })
                 } else{
@@ -117,7 +119,7 @@ router.get('/:dept/:seoName', async (req, res)=>{
                     var selectedDim = [{
                         dimName:_dim[0],
                         dimVal:_dim[1],
-                        removeURL:new Utils().removeParamToQuery('/s/'+req.params.seoName, req.query, _dim[0], _dim[1])
+                        removeURL:new Utils().removeParamToQuery('/c/'+req.params.dept+'/'+req.params.seoName, req.query, _dim[0], _dim[1])
                     }]
                 }
             }

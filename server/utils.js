@@ -76,7 +76,7 @@ Utils.prototype.getFq = function (params) {
 Utils.prototype.getBoostQuery = function(searchQuery, boostDimVal){
     returnArr = [];
     for(var attributename in boostDimVal){
-        console.log(attributename)
+        // console.log(attributename)
         switch(attributename){
             case 'brand':
                 boostQ = boostDimVal[attributename].filter(e=>{
@@ -84,7 +84,7 @@ Utils.prototype.getBoostQuery = function(searchQuery, boostDimVal){
                     return searchQuery.toLowerCase().includes(e.toLowerCase())
                 }).map(y=>{
                     // console.log("y => " + y)
-                    return "brand:\""+y+"\""+"^4";
+                    return "brand:\""+y+"\""+"^3";
                 });
                 returnArr.pushArray(boostQ);
                 continue;
@@ -104,7 +104,7 @@ Utils.prototype.getBoostQuery = function(searchQuery, boostDimVal){
                     return searchQuery.toLowerCase().includes(e.toLowerCase())
                 }).map(y=>{
                     // console.log("y => " + y)
-                    return  "PRODUCT_TYPE:\""+y+"\""+"^3";
+                    return  "PRODUCT_TYPE:\""+y+"\""+"^20";
                 });
                 returnArr.pushArray(boostQ);
                 continue;
@@ -114,13 +114,13 @@ Utils.prototype.getBoostQuery = function(searchQuery, boostDimVal){
                     return searchQuery.toLowerCase().includes(e.toLowerCase())
                 }).map(y=>{
                     // console.log("y => " + y)
-                    return  "ITEM_TYPE:\""+y+"\""+"^3";
+                    return  "ITEM_TYPE:\""+y+"\""+"^20";
                 });
                 returnArr.pushArray(boostQ);
                 continue;
         }
     }
-    console.log(returnArr.join(' '));
+    // console.log(returnArr.join(' '));
     return {
         'field' : 'bq',
         'value' : returnArr.join(' ')
@@ -186,12 +186,13 @@ Utils.prototype.addParamToQuery = (uri, param, name, value) => {
     query = '?';
     for (let index = 0; index < Object.keys(param).length; index++) {
         const ele = Object.keys(param)[index];
+
+        //Skip the pagation param from Dim selection URL
+        if (ele === 'pg')
+            continue;
+
         if(param[ele] instanceof Array){
             var paramVal = param[ele];
-            //Skip the pagation param from Dim selection URL
-            if (ele === 'pg')
-                continue;
-
             for (let count = 0; count < paramVal.length; count++) {
                 const element = paramVal[count];
                 if(name === ele && element === value){

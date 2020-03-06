@@ -42,7 +42,7 @@ services:
     hostname: "node"
     container_name: "node"
     image: node-server-app:1.0
-    entrypoint: /wait-for-it.sh mongo:27017 -t 120 --
+    entrypoint: /wait-for-it.sh mongo:27017 -t 120 -- /wait-for-it.sh solr:8983 -t 120 --
     command: npm run server
     ports:
       - "5000:5000"
