@@ -9,9 +9,9 @@ import Utils from '../../../utils/utils'
 const Price = (data) => {
     var returnHtml = ''
     if (data.price != null && data.price.amounts != null){
-        var salePrice = data.price.amounts.find(element => element.type ==='SALE')
-        var clearancePrice = data.price.amounts.find(element => element.type ==='CLEARANCE')
-        var originalPrice = data.price.amounts.find(element => element.type ==='ORIGINAL')
+        var salePrice = data.price.amounts.find(element => element.type.toUpperCase() ==='SALE')
+        var clearancePrice = data.price.amounts.find(element => element.type.toUpperCase() ==='CLEARANCE')
+        var originalPrice = data.price.amounts.find(element => element.type.toUpperCase() ==='ORIGINAL')
         
         if(clearancePrice != null){
             returnHtml = <p><b>Clearance Price :</b><i> ${clearancePrice.max}</i><span style={{fontSize:'10px', fontWeight:'lighter'}}> ( {clearancePrice.maxPercentOff}% off )</span>

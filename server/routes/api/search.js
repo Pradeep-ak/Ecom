@@ -126,8 +126,8 @@ router.get('/:seoName', async (req, res)=>{
                 if(dimVal.length == 0){
                     continue
                 }
-                
-                dimVal.sort((a, b) => a.label.localeCompare(b.label));
+                // Sort the Dim Value in with label name
+                // dimVal.sort((a, b) => a.label.localeCompare(b.label));
                 
                 dim[k]={
                     'index':k,
@@ -152,7 +152,7 @@ router.get('/:seoName', async (req, res)=>{
                     var selectedDim=result.responseHeader.params.fq.map(e=>{
                         _dim = e.split(':');
                         return {
-                            dimName:_dim[0],
+                            dimName: Utils.Capitalize(_dim[0].split("_").join(' ').trim()),
                             dimVal:_dim[1].split("_").join(' ').trim(),
                             removeURL:new Utils().removeParamToQuery('/s/'+req.params.seoName, req.query, _dim[0], _dim[1])
                         }
@@ -160,7 +160,7 @@ router.get('/:seoName', async (req, res)=>{
                 } else{
                     _dim = result.responseHeader.params.fq.split(':');
                     var selectedDim = [{
-                        dimName:_dim[0],
+                        dimName: Utils.Capitalize(_dim[0].split("_").join(' ').trim()),
                         dimVal:_dim[1].split("_").join(' ').trim(),
                         removeURL:new Utils().removeParamToQuery('/s/'+req.params.seoName, req.query, _dim[0], _dim[1])
                     }]

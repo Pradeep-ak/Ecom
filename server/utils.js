@@ -84,7 +84,7 @@ Utils.prototype.getBoostQuery = function(searchQuery, boostDimVal){
                     return searchQuery.toLowerCase().includes(e.toLowerCase())
                 }).map(y=>{
                     // console.log("y => " + y)
-                    return "brand:\""+y+"\""+"^3";
+                    return "brand:\""+y+"\""+"^30";
                 });
                 returnArr.pushArray(boostQ);
                 continue;
@@ -94,7 +94,7 @@ Utils.prototype.getBoostQuery = function(searchQuery, boostDimVal){
                     return searchQuery.toLowerCase().includes(e.toLowerCase())
                 }).map(y=>{
                     // console.log("y => " + y)
-                    return "color:\""+y+"\""+"^2";
+                    return "color:\""+y+"\""+"^20";
                 });
                 returnArr.pushArray(boostQ);
                 continue;
@@ -104,17 +104,17 @@ Utils.prototype.getBoostQuery = function(searchQuery, boostDimVal){
                     return searchQuery.toLowerCase().includes(e.toLowerCase())
                 }).map(y=>{
                     // console.log("y => " + y)
-                    return  "PRODUCT_TYPE:\""+y+"\""+"^20";
+                    return  "PRODUCT_TYPE:\""+y+"\""+"^50";
                 });
                 returnArr.pushArray(boostQ);
                 continue;
             case 'itemType':
                 boostQ = boostDimVal[attributename].filter(e=>{
-                    //console.log(searchQuery.toLowerCase() + ' = ' + e.toLowerCase() + ' | ' + searchQuery.toLowerCase().includes(e.toLowerCase()))
+                    // console.log(searchQuery.toLowerCase() + ' = ' + e.toLowerCase() + ' | ' + searchQuery.toLowerCase().includes(e.toLowerCase()))
                     return searchQuery.toLowerCase().includes(e.toLowerCase())
                 }).map(y=>{
                     // console.log("y => " + y)
-                    return  "ITEM_TYPE:\""+y+"\""+"^20";
+                    return  "ITEM_TYPE:\""+y+"\""+"^50";
                 });
                 returnArr.pushArray(boostQ);
                 continue;
@@ -265,5 +265,9 @@ return Text
     .replace(/[^\w ]+/g,'')
     .replace(/ +/g,'-');
 };
+
+Utils.Capitalize = (str) => {
+    return str.charAt(0).toUpperCase() + str.toLowerCase().slice(1);
+}
 
 module.exports = Utils;

@@ -33,6 +33,11 @@ services:
       - start
       - -c
       - -f
+  # redis:
+  #   image: redis
+  #   container_name: cache
+  #   ports:
+  #     - "6379:6379"
 
   web-app:
     build: server/.
@@ -121,6 +126,7 @@ services:
       - "3000:3000"
     volumes: 
       - ./client/src:/usr/src/app/src
+      - ./client/public:/usr/src/app/public
     links:
       - mongo
       - solr
@@ -163,7 +169,8 @@ services:
   #     - ME_CONFIG_BASICAUTH_PASSWORD=example
   #     - ME_CONFIG_MONGODB_PORT=27017
   #     - ME_CONFIG_MONGODB_ADMINUSERNAME=root
-  #     - ME_CONFIG_MONGODB_ADMINPASSWORD=MongoDB2019!
+  #     - ME_CONFIG_MONGODB_ADMINPASSWORD=example
+  #     - ME_CONFIG_MONGODB_SERVER=mongo
   #   links :
   #     - mongo
   #   depends_on: 
