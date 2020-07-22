@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width"/>
+    <style>
+    
+    </style>
+</head>
+<body>
+    <table style="width: 100%; box-shadow:'0 4px 8px 0 rgba(28,32,36,.2)'">
+      <tr>
+        <td colspan="12" style="width: 100%;">
+          <h1 style="width: 100%; text-align: center; background-color: #e9c3bc; color: white;">Order Confirmation</h1>
+          <p>Hey {{ userInfo.fname }} {{ userInfo.lname }},</p>
+          <h3>Your Order is confirmed!</h3>
+          <span>
+            Thanks for shopping! Your order is in-progress.<br/>we'll send you as email of the progress related to its shipping.
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="12"  style="width: 30%; text-align: center;"><h2>Order Information</h2></td>
+      </tr>
+      <tr>
+        <td colspan="6" style="width: 30%;">
+          <b>Order Number : </b> {{ OrderId}}<br/>
+          <b>{{ userInfo.fname }} {{ userInfo.lname }}</b><br/>
+          <span>{{ userInfo.email }}</span><br/>
+          <span>{{ userInfo.phoneNumber }}</span>
+          <hr/>
+          <b>Ship To :</b><br/>
+          <span>{{ shipto.address1 }}</span><br/>
+          <span>{{ shipto.address2 }}</span><br/>
+          <span>{{ shipto.city }}, {{ shipto.state }}, {{ shipto.country }}</span><br/>
+          <span>{{ shipto.pincode }}</span><br/>
+          <span><b>Note:</b>{{ shipto.additional }}</span>
+          <hr/>
+          <b>Billed To :</b><br/>
+          <span>{{ billedto.address1 }}</span><br/>
+          <span>{{ billedto.address2 }}</span><br/>
+          <span>{{ billedto.city }}, {{ billedto.state }}, {{ billedto.country }}</span><br/>
+          <span>{{ billedto.pincode }}</span><br/>
+          <span><b>Note:</b>{{ billedto.additional }}</span>
+        </td>
+        <td colspan="6" style="vertical-align:top; width: 30%;">
+          <b>Price Info : </b><br/>
+          <span>Sub Total:₹{{ priceInfo.orderSubTotal }}</span><br/>
+          <span>Shipping:₹{{ priceInfo.orderShippingTotal }}</span><br/>
+          <span><b>Order Total: </b>₹{{ priceInfo.orderTotal }}</span><br/>
+          <hr/>
+          <b>Payment Info :</b><br/>
+          <span>Payment Type:Razorpay</span><br/>
+          <span>Amount Paid:₹{{ amountPaid }}</span><br/>
+          <hr/>          
+        </td>
+      </tr>
+      <hr style="text-align: left;"/>
+      {{#items}}
+        <tr>
+          <td colspan="3" style="width: 30%;">
+            <img src="https://newronstore.in/prdimg/{{ itemInfo.productImage }}" style="width: 30%; height: 30%;"/>
+          </td>
+          <td colspan="3" style="width: 30%;">
+            <span><b>{{ itemInfo.name }}</b></span>
+          </td>
+          <td colspan="3" style="width: 10%;">
+            <span>{{ itemInfo.quantity }}</span>
+          </td>
+          <td colspan="3" style="width: 30%;">
+            <span>
+              ₹{{ priceInfo.eachItemPrice }} each<br/>
+              ₹{{ priceInfo.totalItemPrice }} 
+            </span>
+          </td>
+        </tr>
+      {{/items}}
+      <tr>
+        <td colspan="12" style="width: 100%;">
+          <i><p class="center small">To respond to {{ name }}, you may reply directly to this email or send an email to {{ email }}.</p></i>
+        </td>
+      </tr>
+    </table>
+</body>
+</html>
