@@ -42,12 +42,9 @@ services:
       - ./server/:/usr/src/app
     environment:
       - SOLR_SERVICE_HOST=solr
-      - MONGO_SERVICE_HOST=mongo
     links:
-      - mongo
       - solr
     depends_on:
-      - mongo
       - solr   
 
   auth-app:
