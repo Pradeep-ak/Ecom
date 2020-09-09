@@ -19,7 +19,7 @@ router.post('/refresh',(req,res) => {
         console.log(cres.status)
         res.status(cres.status).json(cres.data)
     }).catch((error)=>{
-        console.log('error.response.status : '+error.response.status)
+        console.log('error.response.status : '+error)
         if (error.response) {
             if(error.response.status===401){
                 acc_ID =accountService.createGuestAccount();

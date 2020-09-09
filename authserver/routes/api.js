@@ -33,7 +33,7 @@ router.post('/refresh',(req, res)=>{
     if(req.body.refresh_token){
         authService.getRefreshToken(req.body.refresh_token)
         .then(data => {
-            //console.log('Refresh Token Handler : ' + data)
+            console.log('Refresh Token Handler : ' + data)
             if(data){
                 var accId = data.get('accId');
                 user = data.get('loggedInStatus')===true?{Role:'R1'}:{Role:'R2'};
@@ -42,6 +42,9 @@ router.post('/refresh',(req, res)=>{
                     refresh_token: req.body.refresh_token,
                     access_token: atoken
                 });
+            }else{
+                console.log('refresh token not found.')
+                return res.status(401).json({});
             }
        }).catch(err => {//failure callback
             console.log(err)
