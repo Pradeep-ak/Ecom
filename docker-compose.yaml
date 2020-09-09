@@ -1,22 +1,8 @@
 version: "3"
 
 services:
-  mongo:
-    image: mongo:latest
-    labels:
-      NAME: "mongo"
-    hostname: "mongo"
-    container_name: "mongo"
-    ports:
-      - "27017:27017"
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=example
-    volumes: 
-      - ./data/mongoData:/data/db
-  
   solr:
-    image: solr:8
+    image: arm32v5/solr:5-slim
     labels:
       NAME: "solr"
     hostname: "solr"
@@ -25,8 +11,9 @@ services:
      - "9983:9983"
      - "8983:8983"
     volumes:
-      - ./data/Solr/data/:/var/solr/data/
-      - ./data/Solr/configsets/:/opt/solr/server/solr/configsets/
+      - ./data/solr/solr:/opt/solr/server/solr
+      # - ./data/Solr/data/:/var/solr/data/
+      # - ./data/Solr/configsets/:/opt/solr/server/solr/configsets/
     entrypoint:
       - docker-entrypoint.sh
       - solr
@@ -47,7 +34,7 @@ services:
     hostname: "node"
     container_name: "node"
     image: node-server-app:1.0
-    entrypoint: /wait-for-it.sh mongo:27017 -t 120 -- /wait-for-it.sh solr:8983 -t 120 --
+    entrypoint: -- /wait-for-it.sh solr:8983 -t 120 --
     command: npm run server
     ports:
       - "5000:5000"
@@ -71,14 +58,11 @@ services:
     hostname: "authserver"
     container_name: "authserver"
     image: auth-server-app:1.0
-    entrypoint: /wait-for-it.sh mongo:27017 -t 120 --
     command: npm run server
     ports:
       - "9000:9000"
     volumes: 
       - ./authserver/:/usr/src/app
-    environment:
-      - MONGO_SERVICE_HOST=mongo
   
   acc-app:
     build: accserver/.
@@ -88,14 +72,12 @@ services:
     hostname: "accserver"
     container_name: "accserver"
     image: acc-server-app:1.0
-    entrypoint: /wait-for-it.sh mongo:27017 -t 120 --
     command: npm run server
     ports:
       - "7000:7000"
     volumes: 
       - ./accserver/:/usr/src/app
     environment:
-      - MONGO_SERVICE_HOST=mongo
       - AUTH_SERVICE_HOST=authserver
 
   checkout-app:
@@ -106,14 +88,11 @@ services:
     hostname: "checkoutserver"
     container_name: "checkoutserver"
     image: checkoutserver-server-app:1.0
-    entrypoint: /wait-for-it.sh mongo:27017 -t 120 --
     command: npm run server
     ports:
       - "8000:8000"
     volumes: 
       - ./checkoutserver/:/usr/src/app
-    environment:
-      - MONGO_SERVICE_HOST=mongo
 
   frontend-app:
     build: client/.
@@ -128,10 +107,8 @@ services:
       - ./client/src:/usr/src/app/src
       - ./client/public:/usr/src/app/public
     links:
-      - mongo
       - solr
     depends_on:
-      - mongo
       - solr
 
   lb-app:
@@ -149,16 +126,16 @@ services:
       - web-app
       - frontend-app
 
-  # dataloader-app:
-  #   build: dataload/.
-  #   labels:
-  #     NAME: "dataload"
-  #   hostname: "dataload"
-  #   container_name: dataload
-  #   image: dataload-app:1.0
-  #   environment:
-  #     - SOLR_SERVICE_HOST=solr
-  #     - MONGO_SERVICE_HOST=mongo
+  dataloader-app:
+    build: dataload/.
+    labels:
+      NAME: "dataload"
+    hostname: "dataload"
+    container_name: dataload
+    image: dataload-app:1.0
+    environment:
+      - SOLR_SERVICE_HOST=solr
+      - MONGO_SERVICE_HOST=mongo
 
   # mongo-express :
   #   image : mongo-express

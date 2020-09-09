@@ -5,7 +5,8 @@ const JWT_KEY = process.env.JWT_KEY || 'Ecom-AuthJWT@2019';
 const A_EXPIRE_TIME = process.env.A_EXPIRE_TIME || 5;
 
 module.exports = {
-mongoURI:'mongodb://root:example@'+MONGO_HOST+':'+MONGO_PORT+'/ecomauth',
+// mongoURI:'mongodb://root:example@'+MONGO_HOST+':'+MONGO_PORT+'/ecomauth',
+mongoURI:'mongodb+srv://root:example@cluster0.y8ksr.gcp.mongodb.net/jecomauth?retryWrites=true&w=majority',
 JWTSecertKey:JWT_KEY,
 accessExpireTime:A_EXPIRE_TIME+'m'
 }

@@ -9,8 +9,9 @@ class mongoDAO():
         mongouser = os.environ.get('MONGO_INITDB_ROOT_USERNAME', 'root')
         mongopass = os.environ.get('MONGO_INITDB_ROOT_PASSWORD', 'example')
 
-        self.dbclient = pymongo.MongoClient( "mongodb://{}:{}@{}:{}/".format(mongouser, mongopass, mongoHostname, mongoPort))
-        self.db = self.dbclient["ecom"]
+        # self.dbclient = pymongo.MongoClient( "mongodb://{}:{}@{}:{}/".format(mongouser, mongopass, mongoHostname, mongoPort))
+        self.db = pymongo.MongoClient( "mongodb+srv://root:example@cluster0.y8ksr.gcp.mongodb.net/jecom?retryWrites=true&w=majority")
+        # self.db = self.dbclient["jecom"]
         self.DepartmentCol = self.db["department"]
         self.CategoriesCol = self.db["category"]
         self.ProductCol = self.db["product"]
