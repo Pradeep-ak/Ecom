@@ -6,10 +6,6 @@ fileLoc = {
     'cat' : './data/cat.json',
     'prod' : './data/prod.json',
     'sku' : './data/sku.json'
-    # 'dept' : '/Users/pkulkar4/Downloads/17102019/data/dept.json',
-    # 'cat' : '/Users/pkulkar4/Downloads/17102019/data/cat.json',
-    # 'prod' : '/Users/pkulkar4/Downloads/17102019/data/prod.json',
-    # 'sku' : '/Users/pkulkar4/Downloads/17102019/data/sku.json'
 }
 
 
