@@ -18,7 +18,7 @@
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "express-requests-logger": "^2.0.6",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "log4js": "^6.1.0",
     "logger": "0.0.1",
     "mongoose": "^5.8.0"
