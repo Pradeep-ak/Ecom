@@ -16,7 +16,7 @@
     "bluebird": "^3.7.2",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
-    "express-requests-logger": "^2.0.6",
+    "express-requests-logger": "^3.0.4",
     "jsonwebtoken": "^8.5.1",
     "log4js": "^5.3.0",
     "mongoose": "^5.7.4",
