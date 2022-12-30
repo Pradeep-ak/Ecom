@@ -17,7 +17,7 @@
     "axios": "^0.19.0",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
-    "express-requests-logger": "^2.0.6",
+    "express-requests-logger": "^3.0.4",
     "jsonwebtoken": "^8.5.1",
     "log4js": "^6.1.0",
     "logger": "0.0.1",
